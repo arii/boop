@@ -47,9 +47,8 @@ class ViewController: UIViewController {
         NSLog("Hello world! Loaded Program!")
         //self.SwiftTimer = NSTimer()
         
-        self.SwiftTimer = NSTimer.scheduledTimerWithTimeInterval(1, target:self, selector: Selector("updateStream"), userInfo: nil, repeats: true)
+        self.SwiftTimer = NSTimer.scheduledTimerWithTimeInterval(1, target:self, selector: Selector(""), userInfo: nil, repeats: true)
 
-        
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -59,7 +58,7 @@ class ViewController: UIViewController {
         captureSession!.sessionPreset = AVCaptureSessionPreset352x288 //AVCaptureSessionPresetPhoto
         
         let backCamera = AVCaptureDevice.defaultDeviceWithMediaType(AVMediaTypeVideo)
-        
+
         var error: NSError?
         var input: AVCaptureDeviceInput!
         do {
@@ -68,7 +67,10 @@ class ViewController: UIViewController {
             error = error1
             input = nil
         }
-        
+        let videoOutput = AVCaptureVideoDataOutput()
+        //videoOutput.setSampleBufferDelegate(AVCaptureVideoDataOutputSampleBufferDelegate!, queue: <#T##dispatch_queue_t!#>)
+        videoOutput.setSampleBufferDelegate(confused, queue: dispatch_queue_create("sample buffer delegate", DISPATCH_QUEUE_SERIAL))
+
         if error == nil && captureSession!.canAddInput(input) {
             captureSession!.addInput(input)
             
@@ -82,9 +84,27 @@ class ViewController: UIViewController {
                 previewLayer!.connection?.videoOrientation = AVCaptureVideoOrientation.Portrait
                 previewView.layer.addSublayer(previewLayer!)
                 
+                captureSession!.addOutput(videoOutput)
+
+                
+                
                 captureSession!.startRunning()
             }
         }
+    }
+    
+    func captureOutput(captureOutput: AVCaptureOutput!, didOutputSampleBuffer sampleBuffer: CMSampleBuffer!, fromConnection connection: AVCaptureConnection!)
+    {
+        
+        let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
+        let context = CIContext(options:nil)
+        let cameraImage = CIImage(CVPixelBuffer: pixelBuffer!)
+        let cgImg = context.createCGImage(cameraImage, fromRect: cameraImage.extent)
+        dispatch_async(dispatch_get_main_queue())
+            {
+                self.getPixels(cgImg)
+        }
+   
         
     }
     

@@ -15,7 +15,7 @@
 		02074DB91C814C5F007A5B7E /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 02074DB81C814C5F007A5B7E /* AudioToolbox.framework */; };
 		02074DBB1C814C6B007A5B7E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 02074DBA1C814C6B007A5B7E /* UIKit.framework */; };
 		02074DBD1C814C76007A5B7E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 02074DBC1C814C76007A5B7E /* Foundation.framework */; };
-		02074DBF1C81E39B007A5B7E /* yourAudioFileName.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 02074DBE1C81E39B007A5B7E /* yourAudioFileName.mp3 */; };
+		02074DC81C821CAD007A5B7E /* boop in Resources */ = {isa = PBXBuildFile; fileRef = 02074DC71C821CAD007A5B7E /* boop */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,8 +29,8 @@
 		02074DB81C814C5F007A5B7E /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		02074DBA1C814C6B007A5B7E /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		02074DBC1C814C76007A5B7E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		02074DBE1C81E39B007A5B7E /* yourAudioFileName.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = yourAudioFileName.mp3; sourceTree = "<group>"; };
 		02074DC01C81F38C007A5B7E /* boop-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "boop-Bridging-Header.h"; sourceTree = "<group>"; };
+		02074DC71C821CAD007A5B7E /* boop */ = {isa = PBXFileReference; lastKnownFileType = folder; name = boop; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,7 +69,7 @@
 		02074DA51C814BEE007A5B7E /* boop */ = {
 			isa = PBXGroup;
 			children = (
-				02074DBE1C81E39B007A5B7E /* yourAudioFileName.mp3 */,
+				02074DC71C821CAD007A5B7E /* boop */,
 				02074DA61C814BEE007A5B7E /* AppDelegate.swift */,
 				02074DA81C814BEE007A5B7E /* ViewController.swift */,
 				02074DAA1C814BEE007A5B7E /* Main.storyboard */,
@@ -140,9 +140,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				02074DB11C814BEE007A5B7E /* LaunchScreen.storyboard in Resources */,
-				02074DBF1C81E39B007A5B7E /* yourAudioFileName.mp3 in Resources */,
 				02074DAE1C814BEE007A5B7E /* Assets.xcassets in Resources */,
 				02074DAC1C814BEE007A5B7E /* Main.storyboard in Resources */,
+				02074DC81C821CAD007A5B7E /* boop in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
