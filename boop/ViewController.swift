@@ -53,8 +53,26 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         if let sound = self.setupAudioPlayerWithFile("yourAudioFileName", type: "mp3") {
             self.mySound = sound
         }
+        if let sound1 = self.setupAudioPlayerWithFile("blip_2_1", type: "mp3") {
+            self.mySound1 = sound1
+        }
+        if let sound2 = self.setupAudioPlayerWithFile("blip_2_2", type: "mp3") {
+            self.mySound2 = sound2
+        }
+
+        if let sound3 = self.setupAudioPlayerWithFile("blip_2_3", type: "mp3") {
+            self.mySound3 = sound3
+        }
+
+        if let sound4 = self.setupAudioPlayerWithFile("blip_2_4", type: "mp3") {
+            self.mySound4 = sound4
+        }
+
+        if let sound5 = self.setupAudioPlayerWithFile("blip_2_5", type: "mp3") {
+            self.mySound5 = sound5
+        }
+
         
-        self.mySound1 =self.setupAudioPlayerWithFile("blip_2_1", type: "mp3") 
         
         self.prev_lum = 0.0
         self.tone = AVAudioEngine()
@@ -65,7 +83,6 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
         self.updater = NSTimer.scheduledTimerWithTimeInterval( 0.01, target: self, selector: "update", userInfo: nil, repeats: true)
 
-
     }
 
     override func accessibilityPerformMagicTap() -> Bool {
@@ -74,30 +91,47 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     
     
     func update() {
-       
+       // AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
+
         let amount = self.prev_lum!
+        if (amount >= 0.95){
+            AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
+        }
+        
+        if (mySound!.playing || mySound1!.playing ){
+            return
+        }
+        
+        
         var vol = 0.0
         
+        var sound = self.mySound
+        
         if (amount > 0.05 && amount < 0.75){
-            vol = (amount - 0.05)*0.15
+            vol = (amount - 0.05)*0.05
             //AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
             
             
         }else if (amount >= 0.75){
-            
             vol = amount
+            //sound = self.mySound1
+            if (amount >= 0.8){
+                sound = self.mySound1
+
+            }
+            
             if (amount >= 0.95){
                 AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
+                sound = self.mySound2
+
             }
             
         }
-        if (mySound!.playing){
-            return
-        }
+        
 
-        mySound?.volume = Float(vol)
-        mySound?.rate = Float(2*vol)
-        mySound?.play()
+        sound?.volume = Float(vol)
+        sound?.rate = Float(2*vol)
+        sound?.play()
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -105,10 +139,18 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         
         captureSession = AVCaptureSession()
         captureSession!.sessionPreset = AVCaptureSessionPreset352x288 //AVCaptureSessionPresetPhoto
-        
-        let backCamera = AVCaptureDevice.defaultDeviceWithMediaType(AVMediaTypeVideo)
-
         var error: NSError?
+
+        let backCamera = AVCaptureDevice.defaultDeviceWithMediaType(AVMediaTypeVideo)
+        do {
+            try backCamera.lockForConfiguration()
+            backCamera.focusMode = AVCaptureFocusMode.Locked
+            //backCamera.setExposureModeCustomWithDuration(CMTimeMakeWithSeconds(10, 1000*1000*1000), ISO: Float(1), completionHandler: nil)
+            backCamera.unlockForConfiguration()
+        }catch let error2 as NSError{
+            error = error2
+        }
+    
         var input: AVCaptureDeviceInput!
         do {
             input = try AVCaptureDeviceInput(device: backCamera)
