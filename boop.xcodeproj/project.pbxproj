@@ -12,6 +12,11 @@
 		02074DAC1C814BEE007A5B7E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 02074DAA1C814BEE007A5B7E /* Main.storyboard */; };
 		02074DAE1C814BEE007A5B7E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 02074DAD1C814BEE007A5B7E /* Assets.xcassets */; };
 		02074DB11C814BEE007A5B7E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 02074DAF1C814BEE007A5B7E /* LaunchScreen.storyboard */; };
+		02074DB91C814C5F007A5B7E /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 02074DB81C814C5F007A5B7E /* AudioToolbox.framework */; };
+		02074DBB1C814C6B007A5B7E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 02074DBA1C814C6B007A5B7E /* UIKit.framework */; };
+		02074DBD1C814C76007A5B7E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 02074DBC1C814C76007A5B7E /* Foundation.framework */; };
+		02074DBF1C81E39B007A5B7E /* yourAudioFileName.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 02074DBE1C81E39B007A5B7E /* yourAudioFileName.mp3 */; };
+		02074DC61C81F465007A5B7E /* ImageProcessor.m in Sources */ = {isa = PBXBuildFile; fileRef = 02074DC41C81F465007A5B7E /* ImageProcessor.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +27,13 @@
 		02074DAD1C814BEE007A5B7E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		02074DB01C814BEE007A5B7E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		02074DB21C814BEE007A5B7E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		02074DB81C814C5F007A5B7E /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		02074DBA1C814C6B007A5B7E /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		02074DBC1C814C76007A5B7E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		02074DBE1C81E39B007A5B7E /* yourAudioFileName.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = yourAudioFileName.mp3; sourceTree = "<group>"; };
+		02074DC01C81F38C007A5B7E /* boop-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "boop-Bridging-Header.h"; sourceTree = "<group>"; };
+		02074DC41C81F465007A5B7E /* ImageProcessor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageProcessor.m; sourceTree = "<group>"; };
+		02074DC51C81F465007A5B7E /* ImageProcessor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageProcessor.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -29,6 +41,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				02074DBD1C814C76007A5B7E /* Foundation.framework in Frameworks */,
+				02074DBB1C814C6B007A5B7E /* UIKit.framework in Frameworks */,
+				02074DB91C814C5F007A5B7E /* AudioToolbox.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -38,6 +53,9 @@
 		02074D9A1C814BEE007A5B7E = {
 			isa = PBXGroup;
 			children = (
+				02074DBC1C814C76007A5B7E /* Foundation.framework */,
+				02074DBA1C814C6B007A5B7E /* UIKit.framework */,
+				02074DB81C814C5F007A5B7E /* AudioToolbox.framework */,
 				02074DA51C814BEE007A5B7E /* boop */,
 				02074DA41C814BEE007A5B7E /* Products */,
 			);
@@ -54,12 +72,16 @@
 		02074DA51C814BEE007A5B7E /* boop */ = {
 			isa = PBXGroup;
 			children = (
+				02074DC41C81F465007A5B7E /* ImageProcessor.m */,
+				02074DC51C81F465007A5B7E /* ImageProcessor.h */,
+				02074DBE1C81E39B007A5B7E /* yourAudioFileName.mp3 */,
 				02074DA61C814BEE007A5B7E /* AppDelegate.swift */,
 				02074DA81C814BEE007A5B7E /* ViewController.swift */,
 				02074DAA1C814BEE007A5B7E /* Main.storyboard */,
 				02074DAD1C814BEE007A5B7E /* Assets.xcassets */,
 				02074DAF1C814BEE007A5B7E /* LaunchScreen.storyboard */,
 				02074DB21C814BEE007A5B7E /* Info.plist */,
+				02074DC01C81F38C007A5B7E /* boop-Bridging-Header.h */,
 			);
 			path = boop;
 			sourceTree = "<group>";
@@ -123,6 +145,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				02074DB11C814BEE007A5B7E /* LaunchScreen.storyboard in Resources */,
+				02074DBF1C81E39B007A5B7E /* yourAudioFileName.mp3 in Resources */,
 				02074DAE1C814BEE007A5B7E /* Assets.xcassets in Resources */,
 				02074DAC1C814BEE007A5B7E /* Main.storyboard in Resources */,
 			);
@@ -135,6 +158,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				02074DC61C81F465007A5B7E /* ImageProcessor.m in Sources */,
 				02074DA91C814BEE007A5B7E /* ViewController.swift in Sources */,
 				02074DA71C814BEE007A5B7E /* AppDelegate.swift in Sources */,
 			);
@@ -247,10 +271,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				INFOPLIST_FILE = boop/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = athack.boop;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "boop/boop-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
@@ -258,10 +285,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				INFOPLIST_FILE = boop/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = athack.boop;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "boop/boop-Bridging-Header.h";
 			};
 			name = Release;
 		};
