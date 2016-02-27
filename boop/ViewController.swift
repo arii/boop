@@ -95,6 +95,7 @@ class ViewController: UIViewController {
             videoConnection.videoOrientation = AVCaptureVideoOrientation.Portrait
             stillImageOutput?.captureStillImageAsynchronouslyFromConnection(videoConnection, completionHandler: {(sampleBuffer, error) in
                 if (sampleBuffer != nil) {
+                    
                     let imageData = AVCaptureStillImageOutput.jpegStillImageNSDataRepresentation(sampleBuffer)
                     let dataProvider = CGDataProviderCreateWithCFData(imageData)
                     let cgImageRef = CGImageCreateWithJPEGDataProvider(dataProvider, nil, true, CGColorRenderingIntent.RenderingIntentDefault)
@@ -104,6 +105,8 @@ class ViewController: UIViewController {
                     
                     NSLog("width:%d", CGImageGetWidth(cgImageRef))
                     NSLog("height:%d", CGImageGetWidth(cgImageRef))
+                    
+                    self.getPixels(cgImageRef!)
 
                     
                     
@@ -116,7 +119,40 @@ class ViewController: UIViewController {
         captureSession!.startRunning()
     }
 
+    func getPixels(image: CGImageRef ){
+        let width = CGImageGetWidth(image)
+        let height = CGImageGetHeight(image)
+       // let length = width * 4
+        //let pixels = UnsafeMutablePointer<UInt8>.alloc(width*height*4)
+        //let colorspace = CGColorSpaceCreateDeviceRGB()
+        //let bytesPerRow = (4 * width);
+        //let bitsPerComponent: UInt8?
+        //let bitsPerComponent = 8
+
+        let pixelData = CGDataProviderCopyData(CGImageGetDataProvider(image))
+        let pixels: UnsafePointer<UInt8> = CFDataGetBytePtr(pixelData)
+        
+        
+      
+       // let context = CGBitmapContextCreate(pixels, width, height, bitsPerComponent, bytesPerRow, colorspace, CGImageGetBitmapInfo(image).rawValue)
+        //CGContextDrawImage(context, CGRectMake(0, 0, CGFloat(width), CGFloat(height)), image);
+        
+        for x in 0...10 {
+            for y in 0...10 {
+                //Here is your raw pixels
+                let offset = 4*((Int(width) * Int(y)) + Int(x))
+                let alpha = pixels[offset]
+                let red = pixels[offset+1]
+                let green = pixels[offset+2]
+                let blue = pixels[offset+3]
+                
+                NSLog("%d, %d, %d, %d" , alpha, red, green, blue)
+  
+            }
+        }    }
     
+   
+
     
     func setupAudioPlayerWithFile(file: NSString, type: NSString) -> AVAudioPlayer? {
         
