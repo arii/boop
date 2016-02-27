@@ -94,8 +94,6 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     func captureOutput(captureOutput: AVCaptureOutput!, didOutputSampleBuffer sampleBuffer: CMSampleBuffer!, fromConnection connection: AVCaptureConnection!)
     {
         
-        
-        
         let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
         let context = CIContext(options:nil)
         let cameraImage = CIImage(CVPixelBuffer: pixelBuffer!)
@@ -119,59 +117,11 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     }
 
     
-    @IBAction func hi(sender: AnyObject) {
-        
-        AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
-        mySound?.play() // ignored if nil
-    }
-
-    @IBAction func didPressTakePhoto(sender: UIButton) {
-        
-        if let videoConnection = stillImageOutput!.connectionWithMediaType(AVMediaTypeVideo) {
-            videoConnection.videoOrientation = AVCaptureVideoOrientation.Portrait
-            stillImageOutput?.captureStillImageAsynchronouslyFromConnection(videoConnection, completionHandler: {(sampleBuffer, error) in
-                if (sampleBuffer != nil) {
-                    
-                    let imageData = AVCaptureStillImageOutput.jpegStillImageNSDataRepresentation(sampleBuffer)
-                    let dataProvider = CGDataProviderCreateWithCFData(imageData)
-                    let cgImageRef = CGImageCreateWithJPEGDataProvider(dataProvider, nil, true, CGColorRenderingIntent.RenderingIntentDefault)
-                    
-                    let image = UIImage(CGImage: cgImageRef!, scale: 1.0, orientation: UIImageOrientation.Right)
-                    self.capturedImage.image = image
-                    
-                    NSLog("width:%d", CGImageGetWidth(cgImageRef))
-                    NSLog("height:%d", CGImageGetWidth(cgImageRef))
-                    
-                    self.getPixels(cgImageRef!)
-
-                    
-                    
-                }
-            })
-        }
-    }
-    
-    @IBAction func didPressTakeAnother(sender: AnyObject) {
-        captureSession!.startRunning()
-    }
-
     func getPixels(image: CGImageRef ){
         let width = CGImageGetWidth(image)
         let height = CGImageGetHeight(image)
-       // let length = width * 4
-        //let pixels = UnsafeMutablePointer<UInt8>.alloc(width*height*4)
-        //let colorspace = CGColorSpaceCreateDeviceRGB()
-        //let bytesPerRow = (4 * width);
-        //let bitsPerComponent: UInt8?
-        //let bitsPerComponent = 8
-
         let pixelData = CGDataProviderCopyData(CGImageGetDataProvider(image))
         let pixels: UnsafePointer<UInt8> = CFDataGetBytePtr(pixelData)
-        
-        
-      
-       // let context = CGBitmapContextCreate(pixels, width, height, bitsPerComponent, bytesPerRow, colorspace, CGImageGetBitmapInfo(image).rawValue)
-        //CGContextDrawImage(context, CGRectMake(0, 0, CGFloat(width), CGFloat(height)), image);
         var sum_red = 0
         var sum_green = 0
         var sum_blue = 0
@@ -211,8 +161,6 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         self.luminance.text = String( lum )
         self.prev_lum = lum
         
-        
-        
         self.notify_sound(lum)
         
         NSLog("%d %d %d " , avg_red, avg_green, avg_blue)
@@ -221,11 +169,20 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     }
     
     
-    
     func notify_sound( amount: Double){
-        mySound?.volume = Float(amount)
+        var vol = 0.0
         
-        AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
+        if (amount > 0.05 && amount < 0.75){
+            vol = (amount - 0.05)*0.5/0.7
+            
+        }else if (amount >= 0.75){
+            
+            vol = (amount - 0.75)/0.25
+        }
+        
+        mySound?.volume = Float(vol)
+        
+       // AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
         mySound?.play() // ignored if nil
 
         
