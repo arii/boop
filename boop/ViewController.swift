@@ -91,6 +91,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         }
     }
     
+    
     func captureOutput(captureOutput: AVCaptureOutput!, didOutputSampleBuffer sampleBuffer: CMSampleBuffer!, fromConnection connection: AVCaptureConnection!)
     {
         
@@ -146,7 +147,6 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             }
         }
         
-    
         
         let avg_red = Double( sum_red/mid_sqr)
         let avg_green = Double( sum_green/mid_sqr)
@@ -173,14 +173,21 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         var vol = 0.0
         
         if (amount > 0.05 && amount < 0.75){
-            vol = (amount - 0.05)*0.5/0.7
+            vol = (amount - 0.05)*0.15
+            //AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
+
             
         }else if (amount >= 0.75){
             
-            vol = (amount - 0.75)/0.25
+            vol = amount
+            if (amount >= 0.95){
+                AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
+            }
+
         }
         
         mySound?.volume = Float(vol)
+        NSLog(String(vol))
         
        // AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
         mySound?.play() // ignored if nil
