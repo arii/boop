@@ -15,6 +15,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
 
     @IBOutlet weak var hi: UIButton!
     var mySound: AVAudioPlayer?
+    var tone : AVAudioEngine?
     @IBOutlet weak var capturedImage: UIImageView!
     @IBOutlet weak var previewView: UIView!
     @IBOutlet weak var capturePhoto: UIButton!
@@ -44,6 +45,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             self.mySound = sound
         }
         self.prev_lum = 0
+        self.tone = AVAudioEngine()
         NSLog("Hello world! Loaded Program!")
 
 
