@@ -9,9 +9,11 @@
 import UIKit
 import AudioToolbox
 import AVFoundation
+import Darwin
 
 
-class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate {
+
+class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate{
 
     @IBOutlet weak var hi: UIButton!
     var mySound: AVAudioPlayer?
@@ -25,12 +27,19 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     var SwiftTimer : NSTimer?
     var sample_buff: CMSampleBufferRef?
     var confused: AVCaptureVideoDataOutputSampleBufferDelegate?
+    var audioEngine : AVAudioEngine?
+    var updater: NSTimer?
     
-    @IBOutlet weak var red: UILabel!
+    var mySound1: AVAudioPlayer?
+    var mySound2: AVAudioPlayer?
+    var mySound3: AVAudioPlayer?
+    var mySound4: AVAudioPlayer?
+    var mySound5: AVAudioPlayer?
+    /*@IBOutlet weak var red: UILabel!
 
     @IBOutlet weak var green: UILabel!
 
-    @IBOutlet weak var blue: UILabel!
+    @IBOutlet weak var blue: UILabel!*/
     
     var prev_lum: Double?
     
@@ -44,11 +53,51 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         if let sound = self.setupAudioPlayerWithFile("yourAudioFileName", type: "mp3") {
             self.mySound = sound
         }
-        self.prev_lum = 0
+        
+        self.mySound1 =self.setupAudioPlayerWithFile("blip_2_1", type: "mp3") 
+        
+        self.prev_lum = 0.0
         self.tone = AVAudioEngine()
         NSLog("Hello world! Loaded Program!")
+        self.audioEngine = AVAudioEngine()
+        AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
+        AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
+        AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
+        self.updater = NSTimer.scheduledTimerWithTimeInterval( 0.01, target: self, selector: "update", userInfo: nil, repeats: true)
 
 
+    }
+
+    override func accessibilityPerformMagicTap() -> Bool {
+        exit(0)
+    }
+    
+    
+    func update() {
+       
+        let amount = self.prev_lum!
+        var vol = 0.0
+        
+        if (amount > 0.05 && amount < 0.75){
+            vol = (amount - 0.05)*0.15
+            //AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
+            
+            
+        }else if (amount >= 0.75){
+            
+            vol = amount
+            if (amount >= 0.95){
+                AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
+            }
+            
+        }
+        if (mySound!.playing){
+            return
+        }
+
+        mySound?.volume = Float(vol)
+        mySound?.rate = Float(2*vol)
+        mySound?.play()
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -157,15 +206,15 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         let lum =  (0.21 * avg_red + 0.72*avg_green + 0.07*avg_blue ) / 255.0
 
         
-        self.red.text = String( avg_red )
+        /*self.red.text = String( avg_red )
         self.green.text = String( avg_green )
-        self.blue.text = String( avg_blue )
-        self.luminance.text = String( lum )
+        self.blue.text = String( avg_blue )*/
+        self.luminance.text = String( Int(100.0*lum) )
         self.prev_lum = lum
         
-        self.notify_sound(lum)
+        //self.notify_sound(lum)
         
-        NSLog("%d %d %d " , avg_red, avg_green, avg_blue)
+        //NSLog("%d %d %d " , avg_red, avg_green, avg_blue)
     
     
     }
@@ -189,12 +238,17 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         }
         
         mySound?.volume = Float(vol)
-        NSLog(String(vol))
-        
-       // AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
-        mySound?.play() // ignored if nil
+        self.playAudioWithVariablePith(2*Float(vol))
+
 
         
+    }
+
+
+    
+    func playAudioWithVariablePith(pitch: Float){
+        mySound?.rate = pitch
+        mySound?.play()
     }
 
     
@@ -227,8 +281,8 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
                     let image = UIImage(CGImage: cgImageRef!, scale: 1.0, orientation: UIImageOrientation.Right)
                     self.capturedImage.image = image
                     
-                    NSLog("width:%d", CGImageGetWidth(cgImageRef))
-                    NSLog("height:%d", CGImageGetWidth(cgImageRef))
+                   // NSLog("width:%d", CGImageGetWidth(cgImageRef))
+                    //NSLog("height:%d", CGImageGetWidth(cgImageRef))
                     
                     self.getPixels(cgImageRef!)
                     
