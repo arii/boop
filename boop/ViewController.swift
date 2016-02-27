@@ -21,12 +21,17 @@ class ViewController: UIViewController {
     var captureSession: AVCaptureSession?
     var stillImageOutput: AVCaptureStillImageOutput?
     var previewLayer: AVCaptureVideoPreviewLayer?
-   
+    var SwiftTimer : NSTimer?
+    var sample_buff: CMSampleBufferRef?
+    var confused: AVCaptureVideoDataOutputSampleBufferDelegate?
+    
     @IBOutlet weak var red: UILabel!
 
     @IBOutlet weak var green: UILabel!
 
     @IBOutlet weak var blue: UILabel!
+    
+    var prev_lum: Double?
     
     
     @IBOutlet weak var luminance: UILabel!
@@ -38,7 +43,12 @@ class ViewController: UIViewController {
         if let sound = self.setupAudioPlayerWithFile("yourAudioFileName", type: "mp3") {
             self.mySound = sound
         }
+        self.prev_lum = 0
         NSLog("Hello world! Loaded Program!")
+        //self.SwiftTimer = NSTimer()
+        
+        self.SwiftTimer = NSTimer.scheduledTimerWithTimeInterval(1, target:self, selector: Selector("updateStream"), userInfo: nil, repeats: true)
+
         
     }
     
@@ -46,7 +56,7 @@ class ViewController: UIViewController {
         super.viewWillAppear(animated)
         
         captureSession = AVCaptureSession()
-        captureSession!.sessionPreset = AVCaptureSessionPresetPhoto
+        captureSession!.sessionPreset = AVCaptureSessionPreset352x288 //AVCaptureSessionPresetPhoto
         
         let backCamera = AVCaptureDevice.defaultDeviceWithMediaType(AVMediaTypeVideo)
         
@@ -88,6 +98,7 @@ class ViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
 
+    
     @IBAction func hi(sender: AnyObject) {
         
         AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
@@ -171,14 +182,18 @@ class ViewController: UIViewController {
         let avg_green = Double( sum_green/mid_sqr)
         let avg_blue = Double(sum_blue/mid_sqr)
         
-        let lum = 0.21 * avg_red + 0.72*avg_green + 0.07*avg_blue
+        let lum =  (0.21 * avg_red + 0.72*avg_green + 0.07*avg_blue ) / 255.0
 
         
         self.red.text = String( avg_red )
         self.green.text = String( avg_green )
         self.blue.text = String( avg_blue )
         self.luminance.text = String( lum )
+        self.prev_lum = lum
         
+        
+        
+        self.notify_sound(lum)
         
         NSLog("%d %d %d " , avg_red, avg_green, avg_blue)
     
@@ -187,7 +202,14 @@ class ViewController: UIViewController {
     
     
     
-   
+    func notify_sound( amount: Double){
+        mySound?.volume = Float(amount)
+        
+        AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
+        mySound?.play() // ignored if nil
+
+        
+    }
 
     
     func setupAudioPlayerWithFile(file: NSString, type: NSString) -> AVAudioPlayer? {
@@ -203,4 +225,35 @@ class ViewController: UIViewController {
         
         return audioPlayer
     }
+    
+    
+     func updateStream() {
+
+        if let videoConnection = stillImageOutput!.connectionWithMediaType(AVMediaTypeVideo) {
+            videoConnection.videoOrientation = AVCaptureVideoOrientation.Portrait
+            stillImageOutput?.captureStillImageAsynchronouslyFromConnection(videoConnection, completionHandler: {(sampleBuffer, error) in
+                if (sampleBuffer != nil) {
+                    
+                    let imageData = AVCaptureStillImageOutput.jpegStillImageNSDataRepresentation(sampleBuffer)
+                    let dataProvider = CGDataProviderCreateWithCFData(imageData)
+                    let cgImageRef = CGImageCreateWithJPEGDataProvider(dataProvider, nil, true, CGColorRenderingIntent.RenderingIntentDefault)
+                    
+                    let image = UIImage(CGImage: cgImageRef!, scale: 1.0, orientation: UIImageOrientation.Right)
+                    self.capturedImage.image = image
+                    
+                    NSLog("width:%d", CGImageGetWidth(cgImageRef))
+                    NSLog("height:%d", CGImageGetWidth(cgImageRef))
+                    
+                    self.getPixels(cgImageRef!)
+                    
+                    
+                    
+                }
+            })
+        }
+    }
+
+    
+    
+    
 }
