@@ -22,6 +22,9 @@
 		02074DD41C824DBF007A5B7E /* blip_2_3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 02074DCF1C824DBF007A5B7E /* blip_2_3.mp3 */; };
 		02074DD51C824DBF007A5B7E /* blip_2_4.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 02074DD01C824DBF007A5B7E /* blip_2_4.mp3 */; };
 		02074DD61C824DBF007A5B7E /* blip_2_5.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 02074DD11C824DBF007A5B7E /* blip_2_5.mp3 */; };
+		02074DD91C8264DE007A5B7E /* blip_2_2_f3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 02074DD71C8264DE007A5B7E /* blip_2_2_f3.mp3 */; };
+		02074DDA1C8264DE007A5B7E /* blip_2_115_f2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 02074DD81C8264DE007A5B7E /* blip_2_115_f2.mp3 */; };
+		02074DDC1C826930007A5B7E /* Icon-120.png in Resources */ = {isa = PBXBuildFile; fileRef = 02074DDB1C826930007A5B7E /* Icon-120.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -43,6 +46,9 @@
 		02074DCF1C824DBF007A5B7E /* blip_2_3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = blip_2_3.mp3; sourceTree = "<group>"; };
 		02074DD01C824DBF007A5B7E /* blip_2_4.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = blip_2_4.mp3; sourceTree = "<group>"; };
 		02074DD11C824DBF007A5B7E /* blip_2_5.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = blip_2_5.mp3; sourceTree = "<group>"; };
+		02074DD71C8264DE007A5B7E /* blip_2_2_f3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = blip_2_2_f3.mp3; sourceTree = "<group>"; };
+		02074DD81C8264DE007A5B7E /* blip_2_115_f2.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = blip_2_115_f2.mp3; sourceTree = "<group>"; };
+		02074DDB1C826930007A5B7E /* Icon-120.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-120.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,6 +89,9 @@
 		02074DA51C814BEE007A5B7E /* boop */ = {
 			isa = PBXGroup;
 			children = (
+				02074DDB1C826930007A5B7E /* Icon-120.png */,
+				02074DD71C8264DE007A5B7E /* blip_2_2_f3.mp3 */,
+				02074DD81C8264DE007A5B7E /* blip_2_115_f2.mp3 */,
 				02074DCD1C824DBF007A5B7E /* blip_2_1.mp3 */,
 				02074DCE1C824DBF007A5B7E /* blip_2_2.mp3 */,
 				02074DCF1C824DBF007A5B7E /* blip_2_3.mp3 */,
@@ -132,6 +141,7 @@
 				TargetAttributes = {
 					02074DA21C814BEE007A5B7E = {
 						CreatedOnToolsVersion = 7.2.1;
+						DevelopmentTeam = E2HD45UCK7;
 					};
 				};
 			};
@@ -158,13 +168,16 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				02074DD91C8264DE007A5B7E /* blip_2_2_f3.mp3 in Resources */,
 				02074DCA1C821D41007A5B7E /* yourAudioFileName.mp3 in Resources */,
 				02074DD31C824DBF007A5B7E /* blip_2_2.mp3 in Resources */,
 				02074DB11C814BEE007A5B7E /* LaunchScreen.storyboard in Resources */,
+				02074DDC1C826930007A5B7E /* Icon-120.png in Resources */,
 				02074DD21C824DBF007A5B7E /* blip_2_1.mp3 in Resources */,
 				02074DD61C824DBF007A5B7E /* blip_2_5.mp3 in Resources */,
 				02074DAE1C814BEE007A5B7E /* Assets.xcassets in Resources */,
 				02074DD51C824DBF007A5B7E /* blip_2_4.mp3 in Resources */,
+				02074DDA1C8264DE007A5B7E /* blip_2_115_f2.mp3 in Resources */,
 				02074DD41C824DBF007A5B7E /* blip_2_3.mp3 in Resources */,
 				02074DAC1C814BEE007A5B7E /* Main.storyboard in Resources */,
 			);
@@ -289,8 +302,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = boop/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = athack.boop;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -303,8 +319,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = boop/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = athack.boop;
 				PRODUCT_NAME = "$(TARGET_NAME)";

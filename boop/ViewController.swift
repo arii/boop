@@ -42,6 +42,8 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     @IBOutlet weak var blue: UILabel!*/
     
     var prev_lum: Double?
+    var prev_lum1: Double?
+
     
     
     @IBOutlet weak var luminance: UILabel!
@@ -60,11 +62,11 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             self.mySound2 = sound2
         }
 
-        if let sound3 = self.setupAudioPlayerWithFile("blip_2_3", type: "mp3") {
+        if let sound3 = self.setupAudioPlayerWithFile("blip_2_115_f2", type: "mp3") {
             self.mySound3 = sound3
         }
 
-        if let sound4 = self.setupAudioPlayerWithFile("blip_2_4", type: "mp3") {
+        if let sound4 = self.setupAudioPlayerWithFile("blip_2_2_f3", type: "mp3") {
             self.mySound4 = sound4
         }
 
@@ -74,7 +76,9 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
 
         
         
+        self.prev_lum1 = 0.0
         self.prev_lum = 0.0
+
         self.tone = AVAudioEngine()
         NSLog("Hello world! Loaded Program!")
         self.audioEngine = AVAudioEngine()
@@ -93,7 +97,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     func update() {
        // AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
 
-        let amount = self.prev_lum!
+        let amount = (self.prev_lum! + self.prev_lum1!)/2
         if (amount >= 0.95){
             AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
         }
@@ -107,22 +111,26 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         
         var sound = self.mySound
         
-        if (amount > 0.05 && amount < 0.75){
-            vol = (amount - 0.05)*0.05
+        if (amount > 0.10 && amount < 0.75){
+            vol = (amount - 0.10)*0.5
             //AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
             
+        }else if (amount >= 0.70){
             
-        }else if (amount >= 0.75){
             vol = amount
-            //sound = self.mySound1
-            if (amount >= 0.8){
-                sound = self.mySound1
-
+            sound = self.mySound1
+            
+            if (amount >= 0.85){
+                sound = self.mySound2
             }
             
-            if (amount >= 0.95){
+            if (amount >= 0.90){
+                sound = self.mySound3
+            }
+   
+            if (amount >= 0.97){
                 AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
-                sound = self.mySound2
+                sound = self.mySound4
 
             }
             
@@ -220,11 +228,17 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         var sum_green = 0
         var sum_blue = 0
         
-        let mid_size = 10
+        let mid_size = 20
         let mid_sqr = (mid_size + 1 ) * (mid_size + 1)
         
-        for x in width/2...width/2 + mid_size{
-            for y in height/2...height/2 + mid_size {
+        let x_min = width/2 - mid_size / 2
+        let x_max = width/2 + mid_size / 2
+        
+        let y_min = height/2 - mid_size / 2
+        let y_max = height/2 + mid_size / 2
+
+        for x in x_min ... x_max  {
+            for y in y_min ... y_max {
                 //Here is your raw pixels
                 let offset = 4*((Int(width) * Int(y)) + Int(x))
                 let red = pixels[offset]
@@ -252,8 +266,8 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         self.green.text = String( avg_green )
         self.blue.text = String( avg_blue )*/
         self.luminance.text = String( Int(100.0*lum) )
-        self.prev_lum = lum
-        
+        self.prev_lum = self.prev_lum1
+        self.prev_lum1 = lum
         //self.notify_sound(lum)
         
         //NSLog("%d %d %d " , avg_red, avg_green, avg_blue)
