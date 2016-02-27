@@ -21,10 +21,15 @@ class ViewController: UIViewController {
     var captureSession: AVCaptureSession?
     var stillImageOutput: AVCaptureStillImageOutput?
     var previewLayer: AVCaptureVideoPreviewLayer?
+   
+    @IBOutlet weak var red: UILabel!
 
+    @IBOutlet weak var green: UILabel!
 
+    @IBOutlet weak var blue: UILabel!
     
     
+    @IBOutlet weak var luminance: UILabel!
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -136,20 +141,51 @@ class ViewController: UIViewController {
       
        // let context = CGBitmapContextCreate(pixels, width, height, bitsPerComponent, bytesPerRow, colorspace, CGImageGetBitmapInfo(image).rawValue)
         //CGContextDrawImage(context, CGRectMake(0, 0, CGFloat(width), CGFloat(height)), image);
+        var sum_red = 0
+        var sum_green = 0
+        var sum_blue = 0
         
-        for x in 0...10 {
-            for y in 0...10 {
+        let mid_size = 10
+        let mid_sqr = (mid_size + 1 ) * (mid_size + 1)
+        
+        for x in width/2...width/2 + mid_size{
+            for y in height/2...height/2 + mid_size {
                 //Here is your raw pixels
                 let offset = 4*((Int(width) * Int(y)) + Int(x))
-                let alpha = pixels[offset]
-                let red = pixels[offset+1]
-                let green = pixels[offset+2]
-                let blue = pixels[offset+3]
+                let red = pixels[offset]
+                let green = pixels[offset+1]
+                let blue = pixels[offset+2]
+                //let alpha = pixels[offset+3]
                 
-                NSLog("%d, %d, %d, %d" , alpha, red, green, blue)
+                sum_red = sum_red + Int(red)
+                sum_green = sum_green + Int(green)
+                sum_blue = sum_blue + Int(blue)
+                
   
             }
-        }    }
+        }
+        
+    
+        
+        let avg_red = Double( sum_red/mid_sqr)
+        let avg_green = Double( sum_green/mid_sqr)
+        let avg_blue = Double(sum_blue/mid_sqr)
+        
+        let lum = 0.21 * avg_red + 0.72*avg_green + 0.07*avg_blue
+
+        
+        self.red.text = String( avg_red )
+        self.green.text = String( avg_green )
+        self.blue.text = String( avg_blue )
+        self.luminance.text = String( lum )
+        
+        
+        NSLog("%d %d %d " , avg_red, avg_green, avg_blue)
+    
+    
+    }
+    
+    
     
    
 
