@@ -36,6 +36,8 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     var mySound4: AVAudioPlayer?
     var mySound5: AVAudioPlayer?
     
+    var backCamera: AVCaptureDevice?
+    
     var lastBuzz: Double?
     
     //var osc :
@@ -171,6 +173,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         } else{
             
             self.lock = true
+            
        // AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
        // sampler!.stopNote(45, onChannel: 0)
        // sampler!.stopNote(70, onChannel: 0)
@@ -178,7 +181,23 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
 
 
        // var freq = UInt8(80)
-        let amount = (self.prev_lum! + self.prev_lum1!)/2
+        var amount = (self.prev_lum! + self.prev_lum1!)/2
+        let iso = Double((self.backCamera?.ISO)!)
+        let exp = Double((self.backCamera?.exposureDuration.seconds)!)
+        
+        var scalelum =  (log10( amount / (iso*exp)) + 2.4)/3.0
+            if (scalelum <= 0.0){
+                scalelum = 0.0
+            }
+            if (scalelum >= 1.0 ){
+                scalelum = 1.0
+            }
+            amount = scalelum
+            
+        NSLog("iso:%f, exp:%f, scalelum:%f", (self.backCamera?.ISO)!, (self.backCamera?.exposureDuration.seconds)!, scalelum)
+            self.luminance.text = String( Int(100.0*amount) )
+
+     
         /*
         if (amount >= 0.95){
             AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
@@ -233,14 +252,14 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         let vol = UInt8(amount*100 + 20)
             let sleep_time = 1000000.0*(0.4-0.3*amount)
 
-            if (amount > 0.02){
+            if (amount > 0.01){
                 self.play(note,velocity:vol )
                 let currentDateTime = NSDate().timeIntervalSince1970
-                if ( (currentDateTime - self.lastBuzz!) > (0.4 + sleep_time/1E6)){
+                /*if ( (currentDateTime - self.lastBuzz!) > (0.4 + sleep_time/1E6)){
 
                     AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
                     self.lastBuzz = currentDateTime
-                }
+                }*/
                 if (amount > 0.95){
                     AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
                 }
@@ -251,7 +270,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         //sleep(1)
         //    AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
 
-        NSLog(String(sleep_time))
+        //NSLog(String(sleep_time))
         usleep (UInt32(sleep_time))
         sampler!.stopNote(note, onChannel: 0)
          //   usleep (UInt32(sleep_time))
@@ -273,20 +292,20 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         captureSession!.sessionPreset = AVCaptureSessionPreset352x288 //AVCaptureSessionPresetPhoto
         var error: NSError?
 
-        let backCamera = AVCaptureDevice.defaultDeviceWithMediaType(AVMediaTypeVideo)
+        backCamera = AVCaptureDevice.defaultDeviceWithMediaType(AVMediaTypeVideo)
         do {
-            try backCamera.lockForConfiguration()
-            backCamera.focusMode = AVCaptureFocusMode.Locked
+            try backCamera?.lockForConfiguration()
+            backCamera?.focusMode = AVCaptureFocusMode.Locked
             //backCamera.setExposureModeCustomWithDuration(duration: CMTime, ISO: <#T##Float#>, completionHandler: <#T##((CMTime) -> Void)!##((CMTime) -> Void)!##(CMTime) -> Void#>)
-            let dur = CMTime(value: 50, timescale: 1000, flags: [], epoch: 0)
+           /* let dur = CMTime(value: 1, timescale: 1000, flags: [], epoch: 0)
             let iso = Float(200)
-            backCamera.setExposureModeCustomWithDuration(dur, ISO: iso, completionHandler: {
+           backCamera?.setExposureModeCustomWithDuration(dur, ISO: iso, completionHandler: {
                 (CMTime) -> Void in
-              //  backCamera.finish()
+             //   backCamera.finish()
                 
-            })
+            })*/
             //backCamera.setExposureModeCustomWithDuration(dur, ISO: Float(200), completionHandler: nil)
-            backCamera.unlockForConfiguration()
+            backCamera?.unlockForConfiguration()
         }catch let error2 as NSError{
             error = error2
         }
@@ -336,6 +355,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             {
                 self.getPixels(cgImg)
         }
+        
    
         
     }
@@ -397,7 +417,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         /*self.red.text = String( avg_red )
         self.green.text = String( avg_green )
         self.blue.text = String( avg_blue )*/
-        self.luminance.text = String( Int(100.0*lum) )
+        //self.luminance.text = String( Int(100.0*lum) )
         self.prev_lum = self.prev_lum1
         self.prev_lum1 = lum
         //self.notify_sound(lum)
