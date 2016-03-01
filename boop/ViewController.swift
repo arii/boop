@@ -35,6 +35,10 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     var mySound3: AVAudioPlayer?
     var mySound4: AVAudioPlayer?
     var mySound5: AVAudioPlayer?
+    
+    var lastBuzz: Double?
+    
+    //var osc :
     /*@IBOutlet weak var red: UILabel!
 
     @IBOutlet weak var green: UILabel!
@@ -43,16 +47,35 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     
     var prev_lum: Double?
     var prev_lum1: Double?
-
     
+    //var ae:AVAudioEngine?
+    var sampler:AVAudioUnitSampler?
+    var mixer:AVAudioMixerNode?
+    
+    var midiNoteNumberFor:Dictionary<String,UInt8>? /*= [
+        "BD":48,
+        "Snr":50,
+        "Hat":52,
+        "Hit":53,
+        "VI":68,
+        "V":67,
+        "i":60,
+        "III": 63
+    ]*/
+    
+
+
+    var lock : Bool?
     
     @IBOutlet weak var luminance: UILabel!
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        
         // Do any additional setup after loading the view, typically from a nib.
         
         // initialize the sound
-        if let sound = self.setupAudioPlayerWithFile("yourAudioFileName", type: "mp3") {
+       if let sound = self.setupAudioPlayerWithFile("yourAudioFileName", type: "mp3") {
             self.mySound = sound
         }
         if let sound1 = self.setupAudioPlayerWithFile("blip_2_1", type: "mp3") {
@@ -86,8 +109,56 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
         AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
         self.updater = NSTimer.scheduledTimerWithTimeInterval( 0.01, target: self, selector: "update", userInfo: nil, repeats: true)
+        
+        let urls = NSBundle.mainBundle().URLsForResourcesWithExtension("wav", subdirectory: "wavs")
+        midiNoteNumberFor = [
+            "BD":48,
+            "Snr":50,
+            "Hat":52,
+            "Hit":53,
+            "VI":68,
+            "V":67,
+            "i":60,
+            "III": 63
+        ]
+        self.lastBuzz =   NSDate().timeIntervalSince1970
+        self.lock = false
+        
 
+        //ae = AVAudioEngine()
+        mixer = self.audioEngine?.mainMixerNode
+        
+        sampler = AVAudioUnitSampler()
+        
+        self.audioEngine?.attachNode(sampler!)
+        //self.audioEngine?.start()
+        self.audioEngine?.connect(sampler!, to: mixer!, format: sampler!.outputFormatForBus(0))
+        var error: NSError?
+
+        do{
+            try   self.audioEngine?.start()
+
+            //try sampler!.loadAudioFilesAtURLs(urls!)
+        }catch let error2 as NSError{
+            error = error2
+            //NSLog(error?.description)
+        }
+        //self.update()
+
+        
+    
     }
+
+
+    func play(note:UInt8, velocity:UInt8){
+        // shouldn't I care if snd exists in the
+        // midiNoteNumberFor Dictionary?????????
+        //NSLog(String(midiNoteNumberFor![snd]!))
+        //sampler!.startNote(midiNoteNumberFor![snd]!, withVelocity: 80,onChannel: 0)
+        sampler!.startNote(note, withVelocity: velocity, onChannel: 0)
+        
+    }
+    
 
     override func accessibilityPerformMagicTap() -> Bool {
         exit(0)
@@ -95,9 +166,20 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     
     
     func update() {
+        if (self.lock!){
+            NSLog("locked")
+        } else{
+            
+            self.lock = true
        // AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
+       // sampler!.stopNote(45, onChannel: 0)
+       // sampler!.stopNote(70, onChannel: 0)
+       // sampler!.stopNote(80, onChannel: 0)
 
+
+       // var freq = UInt8(80)
         let amount = (self.prev_lum! + self.prev_lum1!)/2
+        /*
         if (amount >= 0.95){
             AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
         }
@@ -110,6 +192,9 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         var vol = 0.0
         
         var sound = self.mySound
+        
+        var note = UInt8(45)
+    
         
         if (amount > 0.10 && amount < 0.75){
             vol = (amount - 0.10)*0.5
@@ -133,13 +218,52 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
                 sound = self.mySound4
 
             }
+            freq = UInt8(amount*100)
             
+            note = UInt8(100*amount)
+            self.lastNote = 0
         }
-        
+        */
+            let lo = 73.0
+            let hi = 80
+            
+          let  note = UInt8(20.0*amount + lo)
+            
+        //let note = UInt8(100*amount)
+        let vol = UInt8(amount*100 + 20)
+            let sleep_time = 1000000.0*(0.4-0.3*amount)
 
-        sound?.volume = Float(vol)
-        sound?.rate = Float(2*vol)
-        sound?.play()
+            if (amount > 0.02){
+                self.play(note,velocity:vol )
+                let currentDateTime = NSDate().timeIntervalSince1970
+                if ( (currentDateTime - self.lastBuzz!) > (0.4 + sleep_time/1E6)){
+
+                    AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
+                    self.lastBuzz = currentDateTime
+                }
+                if (amount > 0.95){
+                    AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
+                }
+                
+            }
+
+        //self.play(note,velocity:vol )
+        //sleep(1)
+        //    AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
+
+        NSLog(String(sleep_time))
+        usleep (UInt32(sleep_time))
+        sampler!.stopNote(note, onChannel: 0)
+         //   usleep (UInt32(sleep_time))
+
+        self.lock = false
+        
+        //self.update()
+        
+        //sound?.volume = Float(vol)
+        //sound?.rate = Float(2*vol)
+        //sound?.play()
+        }
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -153,7 +277,15 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         do {
             try backCamera.lockForConfiguration()
             backCamera.focusMode = AVCaptureFocusMode.Locked
-            //backCamera.setExposureModeCustomWithDuration(CMTimeMakeWithSeconds(10, 1000*1000*1000), ISO: Float(1), completionHandler: nil)
+            //backCamera.setExposureModeCustomWithDuration(duration: CMTime, ISO: <#T##Float#>, completionHandler: <#T##((CMTime) -> Void)!##((CMTime) -> Void)!##(CMTime) -> Void#>)
+            let dur = CMTime(value: 50, timescale: 1000, flags: [], epoch: 0)
+            let iso = Float(200)
+            backCamera.setExposureModeCustomWithDuration(dur, ISO: iso, completionHandler: {
+                (CMTime) -> Void in
+              //  backCamera.finish()
+                
+            })
+            //backCamera.setExposureModeCustomWithDuration(dur, ISO: Float(200), completionHandler: nil)
             backCamera.unlockForConfiguration()
         }catch let error2 as NSError{
             error = error2
@@ -271,6 +403,9 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         //self.notify_sound(lum)
         
         //NSLog("%d %d %d " , avg_red, avg_green, avg_blue)
+       // if (!self.lock!){
+       //     self.update()
+       // }
     
     
     }
