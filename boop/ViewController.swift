@@ -39,13 +39,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     var backCamera: AVCaptureDevice?
     
     var lastBuzz: Double?
-    
-    //var osc :
-    /*@IBOutlet weak var red: UILabel!
 
-    @IBOutlet weak var green: UILabel!
-
-    @IBOutlet weak var blue: UILabel!*/
     
     var prev_lum: Double?
     var prev_lum1: Double?
@@ -255,7 +249,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             if (amount > 0.01){
                 self.play(note,velocity:vol )
                 let currentDateTime = NSDate().timeIntervalSince1970
-                /*if ( (currentDateTime - self.lastBuzz!) > (0.4 + sleep_time/1E6)){
+               /* if ( (currentDateTime - self.lastBuzz!) > (3*(0.4 + sleep_time/1E6))){
 
                     AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
                     self.lastBuzz = currentDateTime
