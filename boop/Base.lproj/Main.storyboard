@@ -18,9 +18,9 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="0" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fL5-jv-s3F">
-                                <rect key="frame" x="10" y="28" width="302" height="523"/>
+                                <rect key="frame" x="10" y="212" width="302" height="134"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="61"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tp6-3R-riv">
@@ -30,12 +30,21 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Icon-120.png" translatesAutoresizingMaskIntoConstraints="NO" id="fQv-QA-dzP">
                                 <rect key="frame" x="41" y="337" width="240" height="203"/>
                             </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SIG-SI-gSL">
+                                <rect key="frame" x="0.0" y="494" width="336" height="176"/>
+                                <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <state key="normal" title="Enable Vibrate"/>
+                                <connections>
+                                    <action selector="toggle_mute:" destination="BYZ-38-t0r" eventType="touchUpInside" id="VCC-LQ-qCH"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <connections>
                         <outlet property="luminance" destination="fL5-jv-s3F" id="69G-Ig-tcH"/>
                         <outlet property="previewView" destination="tp6-3R-riv" id="FNs-i9-3a0"/>
+                        <outlet property="vibrate_enable" destination="SIG-SI-gSL" id="6SC-jR-RfV"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

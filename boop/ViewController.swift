@@ -15,6 +15,7 @@ import Darwin
 
 class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate{
 
+    @IBOutlet weak var vibrate_enable: UIButton!
     @IBOutlet weak var hi: UIButton!
     var mySound: AVAudioPlayer?
     var tone : AVAudioEngine?
@@ -37,6 +38,8 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     var mySound5: AVAudioPlayer?
     
     var backCamera: AVCaptureDevice?
+    
+    var mute_mode : Bool?
     
     var lastBuzz: Double?
 
@@ -67,7 +70,6 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        
         // Do any additional setup after loading the view, typically from a nib.
         
         // initialize the sound
@@ -97,6 +99,8 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         
         self.prev_lum1 = 0.0
         self.prev_lum = 0.0
+        self.mute_mode = false
+        
 
         self.tone = AVAudioEngine()
         NSLog("Hello world! Loaded Program!")
@@ -179,7 +183,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         let iso = Double((self.backCamera?.ISO)!)
         let exp = Double((self.backCamera?.exposureDuration.seconds)!)
         
-        var scalelum =  (log10( amount / (iso*exp)) + 2.4)/3.0
+        var scalelum =  (log10( amount / (iso*exp)) + 2.4)/2.8
             if (scalelum <= 0.0){
                 scalelum = 0.0
             }
@@ -245,16 +249,18 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         //let note = UInt8(100*amount)
         let vol = UInt8(amount*100 + 20)
             let sleep_time = 1000000.0*(0.4-0.3*amount)
+            let vibe_sleep_time = (1.7-1.3*amount)
+
 
             if (amount > 0.01){
                 self.play(note,velocity:vol )
                 let currentDateTime = NSDate().timeIntervalSince1970
-               /* if ( (currentDateTime - self.lastBuzz!) > (3*(0.4 + sleep_time/1E6))){
+               if (self.mute_mode! && ((currentDateTime - self.lastBuzz!) > vibe_sleep_time)){
 
                     AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
                     self.lastBuzz = currentDateTime
-                }*/
-                if (amount > 0.95){
+                }
+                if (amount > 0.9){
                     AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
                 }
                 
@@ -364,6 +370,19 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         // Dispose of any resources that can be recreated.
     }
 
+    
+    
+    @IBAction func toggle_mute(sender: AnyObject) {
+        if (self.mute_mode!){
+            self.vibrate_enable.setTitle("Enable Vibrate",forState: UIControlState.Normal)
+        }else{
+            self.vibrate_enable.setTitle("Disable Vibrate", forState:UIControlState.Normal)
+        }
+        self.mute_mode = !(self.mute_mode!)
+
+        
+    }
+    
     
     func getPixels(image: CGImageRef ){
         let width = CGImageGetWidth(image)
