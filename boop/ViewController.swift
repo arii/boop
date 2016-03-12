@@ -62,13 +62,20 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         "III": 63
     ]*/
     
-
+    let tap = UITapGestureRecognizer()
 
     var lock : Bool?
     
     @IBOutlet weak var luminance: UILabel!
     override func viewDidLoad() {
+       // UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification,"Started Boop Ari")
+       // UIAccessibilityPostNotification(<#T##notification: UIAccessibilityNotifications##UIAccessibilityNotifications#>, <#T##argument: AnyObject?##AnyObject?#>)
         super.viewDidLoad()
+
+        var swipe: UISwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: "GotoProfile")
+        swipe.direction = UISwipeGestureRecognizerDirection.Down
+        self.view.addGestureRecognizer(swipe)
+        
 
         // Do any additional setup after loading the view, typically from a nib.
         
@@ -159,8 +166,11 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         
     }
     
+   
+    
 
     override func accessibilityPerformMagicTap() -> Bool {
+        
         exit(0)
     }
     
@@ -192,7 +202,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             }
             amount = scalelum
             
-        NSLog("iso:%f, exp:%f, scalelum:%f", (self.backCamera?.ISO)!, (self.backCamera?.exposureDuration.seconds)!, scalelum)
+       //XXX NSLog("iso:%f, exp:%f, scalelum:%f", (self.backCamera?.ISO)!, (self.backCamera?.exposureDuration.seconds)!, scalelum)
             self.luminance.text = String( Int(100.0*amount) )
 
      
@@ -360,6 +370,8 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         
     }
     
+
+    
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         previewLayer!.frame = previewView.bounds
@@ -371,6 +383,34 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     }
 
     
+    func GotoProfile(){
+       // self.performSegueWithIdentifier("Profilesegue", sender: nil)
+        self.toggle()
+    }
+    
+    override func accessibilityPerformEscape() -> Bool {
+        self.toggle()
+        return true
+        
+    }
+
+    
+    
+   /* override func accessibilityScroll(direction: UIAccessibilityScrollDirection) -> Bool {
+        NSLog("SCROLL TOGGLE")
+
+        switch direction{
+        case .Down:
+            self.toggle()
+        default:
+            NSLog("no dir")
+        }
+        
+        return true
+    }*/
+  
+    
+
     
     @IBAction func toggle_mute(sender: AnyObject) {
         if (self.mute_mode!){
@@ -381,6 +421,16 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         self.mute_mode = !(self.mute_mode!)
 
         
+    }
+    
+    func toggle(){
+        if (self.mute_mode!){
+            self.vibrate_enable.setTitle("Enable Vibrate",forState: UIControlState.Normal)
+        }else{
+            self.vibrate_enable.setTitle("Disable Vibrate", forState:UIControlState.Normal)
+        }
+        self.mute_mode = !(self.mute_mode!)
+
     }
     
     
