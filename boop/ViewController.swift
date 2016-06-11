@@ -30,12 +30,8 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     var confused: AVCaptureVideoDataOutputSampleBufferDelegate?
     var audioEngine : AVAudioEngine?
     var updater: NSTimer?
+    var setup: Bool?
     
-    var mySound1: AVAudioPlayer?
-    var mySound2: AVAudioPlayer?
-    var mySound3: AVAudioPlayer?
-    var mySound4: AVAudioPlayer?
-    var mySound5: AVAudioPlayer?
     
     var backCamera: AVCaptureDevice?
     
@@ -47,24 +43,13 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     var prev_lum: Double?
     var prev_lum1: Double?
     
-    //var ae:AVAudioEngine?
     var sampler:AVAudioUnitSampler?
     var mixer:AVAudioMixerNode?
-    
-    var midiNoteNumberFor:Dictionary<String,UInt8>? /*= [
-        "BD":48,
-        "Snr":50,
-        "Hat":52,
-        "Hit":53,
-        "VI":68,
-        "V":67,
-        "i":60,
-        "III": 63
-    ]*/
     
     let tap = UITapGestureRecognizer()
 
     var lock : Bool?
+    var processImgLock : Bool?
     
     @IBOutlet weak var luminance: UILabel!
     override func viewDidLoad() {
@@ -72,37 +57,11 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
        // UIAccessibilityPostNotification(<#T##notification: UIAccessibilityNotifications##UIAccessibilityNotifications#>, <#T##argument: AnyObject?##AnyObject?#>)
         super.viewDidLoad()
 
-        var swipe: UISwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: "GotoProfile")
+        let swipe: UISwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: "GotoProfile")
         swipe.direction = UISwipeGestureRecognizerDirection.Down
         self.view.addGestureRecognizer(swipe)
         
 
-        // Do any additional setup after loading the view, typically from a nib.
-        
-        // initialize the sound
-       if let sound = self.setupAudioPlayerWithFile("yourAudioFileName", type: "mp3") {
-            self.mySound = sound
-        }
-        if let sound1 = self.setupAudioPlayerWithFile("blip_2_1", type: "mp3") {
-            self.mySound1 = sound1
-        }
-        if let sound2 = self.setupAudioPlayerWithFile("blip_2_2", type: "mp3") {
-            self.mySound2 = sound2
-        }
-
-        if let sound3 = self.setupAudioPlayerWithFile("blip_2_115_f2", type: "mp3") {
-            self.mySound3 = sound3
-        }
-
-        if let sound4 = self.setupAudioPlayerWithFile("blip_2_2_f3", type: "mp3") {
-            self.mySound4 = sound4
-        }
-
-        if let sound5 = self.setupAudioPlayerWithFile("blip_2_5", type: "mp3") {
-            self.mySound5 = sound5
-        }
-
-        
         
         self.prev_lum1 = 0.0
         self.prev_lum = 0.0
@@ -117,58 +76,33 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
         self.updater = NSTimer.scheduledTimerWithTimeInterval( 0.01, target: self, selector: "update", userInfo: nil, repeats: true)
         
-        let urls = NSBundle.mainBundle().URLsForResourcesWithExtension("wav", subdirectory: "wavs")
-        midiNoteNumberFor = [
-            "BD":48,
-            "Snr":50,
-            "Hat":52,
-            "Hit":53,
-            "VI":68,
-            "V":67,
-            "i":60,
-            "III": 63
-        ]
+       
         self.lastBuzz =   NSDate().timeIntervalSince1970
         self.lock = false
+        self.processImgLock = false
         
-
-        //ae = AVAudioEngine()
         mixer = self.audioEngine?.mainMixerNode
         
         sampler = AVAudioUnitSampler()
         
         self.audioEngine?.attachNode(sampler!)
-        //self.audioEngine?.start()
         self.audioEngine?.connect(sampler!, to: mixer!, format: sampler!.outputFormatForBus(0))
         var error: NSError?
 
         do{
             try   self.audioEngine?.start()
-
-            //try sampler!.loadAudioFilesAtURLs(urls!)
         }catch let error2 as NSError{
             error = error2
-            //NSLog(error?.description)
+            NSLog(error!.description)
         }
-        //self.update()
-
-        
-    
     }
 
 
     func play(note:UInt8, velocity:UInt8){
-        // shouldn't I care if snd exists in the
-        // midiNoteNumberFor Dictionary?????????
-        //NSLog(String(midiNoteNumberFor![snd]!))
-        //sampler!.startNote(midiNoteNumberFor![snd]!, withVelocity: 80,onChannel: 0)
         sampler!.startNote(note, withVelocity: velocity, onChannel: 0)
         
     }
     
-   
-    
-
     override func accessibilityPerformMagicTap() -> Bool {
         
         exit(0)
@@ -182,13 +116,8 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             
             self.lock = true
             
-       // AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
-       // sampler!.stopNote(45, onChannel: 0)
-       // sampler!.stopNote(70, onChannel: 0)
-       // sampler!.stopNote(80, onChannel: 0)
 
 
-       // var freq = UInt8(80)
         var amount = (self.prev_lum! + self.prev_lum1!)/2
         let iso = Double((self.backCamera?.ISO)!)
         let exp = Double((self.backCamera?.exposureDuration.seconds)!)
@@ -205,54 +134,8 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
        //XXX NSLog("iso:%f, exp:%f, scalelum:%f", (self.backCamera?.ISO)!, (self.backCamera?.exposureDuration.seconds)!, scalelum)
             self.luminance.text = String( Int(100.0*amount) )
 
-     
-        /*
-        if (amount >= 0.95){
-            AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
-        }
-        
-        if (mySound!.playing || mySound1!.playing ){
-            return
-        }
-        
-        
-        var vol = 0.0
-        
-        var sound = self.mySound
-        
-        var note = UInt8(45)
-    
-        
-        if (amount > 0.10 && amount < 0.75){
-            vol = (amount - 0.10)*0.5
-            //AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
-            
-        }else if (amount >= 0.70){
-            
-            vol = amount
-            sound = self.mySound1
-            
-            if (amount >= 0.85){
-                sound = self.mySound2
-            }
-            
-            if (amount >= 0.90){
-                sound = self.mySound3
-            }
-   
-            if (amount >= 0.97){
-                AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
-                sound = self.mySound4
-
-            }
-            freq = UInt8(amount*100)
-            
-            note = UInt8(100*amount)
-            self.lastNote = 0
-        }
-        */
-            let lo = 73.0
-            let hi = 80
+                 let lo = 73.0
+            _ = 80
             
           let  note = UInt8(20.0*amount + lo)
             
@@ -275,50 +158,21 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
                 }
                 
             }
-
-        //self.play(note,velocity:vol )
-        //sleep(1)
-        //    AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
-
-        //NSLog(String(sleep_time))
         usleep (UInt32(sleep_time))
         sampler!.stopNote(note, onChannel: 0)
-         //   usleep (UInt32(sleep_time))
-
         self.lock = false
-        
-        //self.update()
-        
-        //sound?.volume = Float(vol)
-        //sound?.rate = Float(2*vol)
-        //sound?.play()
         }
     }
     
-    override func viewWillAppear(animated: Bool) {
+  override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        setup = false
         
         captureSession = AVCaptureSession()
-        captureSession!.sessionPreset = AVCaptureSessionPreset352x288 //AVCaptureSessionPresetPhoto
+        captureSession!.sessionPreset = AVCaptureSessionPreset352x288
         var error: NSError?
 
         backCamera = AVCaptureDevice.defaultDeviceWithMediaType(AVMediaTypeVideo)
-        do {
-            try backCamera?.lockForConfiguration()
-            backCamera?.focusMode = AVCaptureFocusMode.Locked
-            //backCamera.setExposureModeCustomWithDuration(duration: CMTime, ISO: <#T##Float#>, completionHandler: <#T##((CMTime) -> Void)!##((CMTime) -> Void)!##(CMTime) -> Void#>)
-           /* let dur = CMTime(value: 1, timescale: 1000, flags: [], epoch: 0)
-            let iso = Float(200)
-           backCamera?.setExposureModeCustomWithDuration(dur, ISO: iso, completionHandler: {
-                (CMTime) -> Void in
-             //   backCamera.finish()
-                
-            })*/
-            //backCamera.setExposureModeCustomWithDuration(dur, ISO: Float(200), completionHandler: nil)
-            backCamera?.unlockForConfiguration()
-        }catch let error2 as NSError{
-            error = error2
-        }
     
         var input: AVCaptureDeviceInput!
         do {
@@ -328,8 +182,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             input = nil
         }
         let videoOutput = AVCaptureVideoDataOutput()
-        //videoOutput.setSampleBufferDelegate(AVCaptureVideoDataOutputSampleBufferDelegate!, queue: <#T##dispatch_queue_t!#>)
-       videoOutput.setSampleBufferDelegate(self, queue: dispatch_queue_create("sample buffer delegate", DISPATCH_QUEUE_SERIAL))
+        videoOutput.setSampleBufferDelegate(self, queue: dispatch_queue_create("sample buffer delegate", DISPATCH_QUEUE_SERIAL))
         
         if error == nil && captureSession!.canAddInput(input) {
             captureSession!.addInput(input)
@@ -337,26 +190,23 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             stillImageOutput = AVCaptureStillImageOutput()
             stillImageOutput!.outputSettings = [AVVideoCodecKey: AVVideoCodecJPEG]
             if captureSession!.canAddOutput(stillImageOutput) {
-                captureSession!.addOutput(stillImageOutput)
                 
+                captureSession!.addOutput(stillImageOutput)
                 previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
                 previewLayer!.videoGravity = AVLayerVideoGravityResizeAspect
                 previewLayer!.connection?.videoOrientation = AVCaptureVideoOrientation.Portrait
                 previewView.layer.addSublayer(previewLayer!)
                 
                 captureSession!.addOutput(videoOutput)
-
-                
-                
                 captureSession!.startRunning()
+                setup = true
             }
         }
     }
     
     
-    func captureOutput(captureOutput: AVCaptureOutput!, didOutputSampleBuffer sampleBuffer: CMSampleBuffer!, fromConnection connection: AVCaptureConnection!)
+   func captureOutput(captureOutput: AVCaptureOutput!, didOutputSampleBuffer sampleBuffer: CMSampleBuffer!, fromConnection connection: AVCaptureConnection!)
     {
-        
         let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
         let context = CIContext(options:nil)
         let cameraImage = CIImage(CVPixelBuffer: pixelBuffer!)
@@ -366,15 +216,13 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
                 self.getPixels(cgImg)
         }
         
-   
-        
     }
-    
-
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-        previewLayer!.frame = previewView.bounds
+        if (setup!){
+            previewLayer!.frame = previewView.bounds
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -395,23 +243,6 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     }
 
     
-    
-   /* override func accessibilityScroll(direction: UIAccessibilityScrollDirection) -> Bool {
-        NSLog("SCROLL TOGGLE")
-
-        switch direction{
-        case .Down:
-            self.toggle()
-        default:
-            NSLog("no dir")
-        }
-        
-        return true
-    }*/
-  
-    
-
-    
     @IBAction func toggle_mute(sender: AnyObject) {
         if (self.mute_mode!){
             self.vibrate_enable.setTitle("Enable Vibrate",forState: UIControlState.Normal)
@@ -419,8 +250,6 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             self.vibrate_enable.setTitle("Disable Vibrate", forState:UIControlState.Normal)
         }
         self.mute_mode = !(self.mute_mode!)
-
-        
     }
     
     func toggle(){
@@ -430,11 +259,13 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             self.vibrate_enable.setTitle("Disable Vibrate", forState:UIControlState.Normal)
         }
         self.mute_mode = !(self.mute_mode!)
-
     }
     
     
     func getPixels(image: CGImageRef ){
+        if (!processImgLock! && !lock!){
+            processImgLock = true
+            
         let width = CGImageGetWidth(image)
         let height = CGImageGetHeight(image)
         let pixelData = CGDataProviderCopyData(CGImageGetDataProvider(image))
@@ -459,13 +290,9 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
                 let red = pixels[offset]
                 let green = pixels[offset+1]
                 let blue = pixels[offset+2]
-                //let alpha = pixels[offset+3]
-                
                 sum_red = sum_red + Int(red)
                 sum_green = sum_green + Int(green)
                 sum_blue = sum_blue + Int(blue)
-                
-  
             }
         }
         
@@ -475,99 +302,12 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         let avg_blue = Double(sum_blue/mid_sqr)
         
         let lum =  (0.21 * avg_red + 0.72*avg_green + 0.07*avg_blue ) / 255.0
-
-        
-        /*self.red.text = String( avg_red )
-        self.green.text = String( avg_green )
-        self.blue.text = String( avg_blue )*/
-        //self.luminance.text = String( Int(100.0*lum) )
         self.prev_lum = self.prev_lum1
         self.prev_lum1 = lum
-        //self.notify_sound(lum)
-        
-        //NSLog("%d %d %d " , avg_red, avg_green, avg_blue)
-       // if (!self.lock!){
-       //     self.update()
-       // }
-    
-    
-    }
-    
-    
-    func notify_sound( amount: Double){
-        var vol = 0.0
-        
-        if (amount > 0.05 && amount < 0.75){
-            vol = (amount - 0.05)*0.15
-            //AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
-
+        processImgLock = false
             
-        }else if (amount >= 0.75){
-            
-            vol = amount
-            if (amount >= 0.95){
-                AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
-            }
-
-        }
-        
-        mySound?.volume = Float(vol)
-        self.playAudioWithVariablePith(2*Float(vol))
-
-
-        
-    }
-
-
-    
-    func playAudioWithVariablePith(pitch: Float){
-        mySound?.rate = pitch
-        mySound?.play()
-    }
-
-    
-    func setupAudioPlayerWithFile(file: NSString, type: NSString) -> AVAudioPlayer? {
-        
-        let path = NSBundle.mainBundle().pathForResource(file as String, ofType: type as String)
-        let url = NSURL.fileURLWithPath(path!)
-        var audioPlayer: AVAudioPlayer?
-        do {
-            try audioPlayer = AVAudioPlayer(contentsOfURL: url)
-        } catch {
-            print("Player not available")
-        }
-        
-        return audioPlayer
-    }
-    
-    
-     func updateStream() {
-
-        if let videoConnection = stillImageOutput!.connectionWithMediaType(AVMediaTypeVideo) {
-            videoConnection.videoOrientation = AVCaptureVideoOrientation.Portrait
-            stillImageOutput?.captureStillImageAsynchronouslyFromConnection(videoConnection, completionHandler: {(sampleBuffer, error) in
-                if (sampleBuffer != nil) {
-                    
-                    let imageData = AVCaptureStillImageOutput.jpegStillImageNSDataRepresentation(sampleBuffer)
-                    let dataProvider = CGDataProviderCreateWithCFData(imageData)
-                    let cgImageRef = CGImageCreateWithJPEGDataProvider(dataProvider, nil, true, CGColorRenderingIntent.RenderingIntentDefault)
-                    
-                    let image = UIImage(CGImage: cgImageRef!, scale: 1.0, orientation: UIImageOrientation.Right)
-                    self.capturedImage.image = image
-                    
-                   // NSLog("width:%d", CGImageGetWidth(cgImageRef))
-                    //NSLog("height:%d", CGImageGetWidth(cgImageRef))
-                    
-                    self.getPixels(cgImageRef!)
-                    
-                    
-                    
-                }
-            })
         }
     }
 
-    
-    
-    
 }
+ 
