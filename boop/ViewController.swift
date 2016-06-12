@@ -16,27 +16,32 @@ import Darwin
 class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate{
 
     @IBOutlet weak var vibrate_enable: UIButton!
-    @IBOutlet weak var hi: UIButton!
+   // @IBOutlet weak var hi: UIButton!
     var mySound: AVAudioPlayer?
-    var tone : AVAudioEngine?
-    @IBOutlet weak var capturedImage: UIImageView!
+   // @IBOutlet weak var capturedImage: UIImageView!
     @IBOutlet weak var previewView: UIView!
-    @IBOutlet weak var capturePhoto: UIButton!
+   // @IBOutlet weak var capturePhoto: UIButton!
     var captureSession: AVCaptureSession?
     var stillImageOutput: AVCaptureStillImageOutput?
     var previewLayer: AVCaptureVideoPreviewLayer?
     var SwiftTimer : NSTimer?
-    var sample_buff: CMSampleBufferRef?
-    var confused: AVCaptureVideoDataOutputSampleBufferDelegate?
+   // var sample_buff: CMSampleBufferRef?
+   // var confused: AVCaptureVideoDataOutputSampleBufferDelegate?
     var audioEngine : AVAudioEngine?
     var updater: NSTimer?
     var setup: Bool?
     
+    //pixel callbacks
+    var pixelBuffer: CVPixelBuffer?
+    var context: CIContext?
+    var cameraImage: CIImage?
+    var cgImg: CGImage?
+    var pixelData:CFData?
+    var pixels: UnsafePointer<UInt8>?
+    
     
     var backCamera: AVCaptureDevice?
-    
     var mute_mode : Bool?
-    
     var lastBuzz: Double?
 
     
@@ -53,28 +58,22 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     
     @IBOutlet weak var luminance: UILabel!
     override func viewDidLoad() {
-       // UIAccessibilityPostNotification(UIAccessibilityAnnouncementNotification,"Started Boop Ari")
-       // UIAccessibilityPostNotification(<#T##notification: UIAccessibilityNotifications##UIAccessibilityNotifications#>, <#T##argument: AnyObject?##AnyObject?#>)
         super.viewDidLoad()
 
         let swipe: UISwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: "GotoProfile")
         swipe.direction = UISwipeGestureRecognizerDirection.Down
         self.view.addGestureRecognizer(swipe)
         
-
-        
         self.prev_lum1 = 0.0
         self.prev_lum = 0.0
         self.mute_mode = false
         
 
-        self.tone = AVAudioEngine()
         NSLog("Hello world! Loaded Program!")
         self.audioEngine = AVAudioEngine()
         AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
         AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
         AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
-        self.updater = NSTimer.scheduledTimerWithTimeInterval( 0.01, target: self, selector: "update", userInfo: nil, repeats: true)
         
        
         self.lastBuzz =   NSDate().timeIntervalSince1970
@@ -82,29 +81,27 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         self.processImgLock = false
         
         mixer = self.audioEngine?.mainMixerNode
-        
         sampler = AVAudioUnitSampler()
-        
         self.audioEngine?.attachNode(sampler!)
         self.audioEngine?.connect(sampler!, to: mixer!, format: sampler!.outputFormatForBus(0))
         var error: NSError?
-
         do{
             try   self.audioEngine?.start()
         }catch let error2 as NSError{
             error = error2
             NSLog(error!.description)
         }
+        self.updater = NSTimer.scheduledTimerWithTimeInterval( 0.07, target: self, selector: "update", userInfo: nil, repeats: true)
+        
+
     }
 
 
     func play(note:UInt8, velocity:UInt8){
-        sampler!.startNote(note, withVelocity: velocity, onChannel: 0)
-        
+        sampler!.startNote(note, withVelocity: velocity, onChannel: 1)
     }
     
     override func accessibilityPerformMagicTap() -> Bool {
-        
         exit(0)
     }
     
@@ -134,12 +131,9 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
        //XXX NSLog("iso:%f, exp:%f, scalelum:%f", (self.backCamera?.ISO)!, (self.backCamera?.exposureDuration.seconds)!, scalelum)
             self.luminance.text = String( Int(100.0*amount) )
 
-                 let lo = 73.0
-            _ = 80
-            
+        let lo = 73.0
           let  note = UInt8(20.0*amount + lo)
             
-        //let note = UInt8(100*amount)
         let vol = UInt8(amount*100 + 20)
             let sleep_time = 1000000.0*(0.4-0.3*amount)
             let vibe_sleep_time = (1.7-1.3*amount)
@@ -158,8 +152,11 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
                 }
                 
             }
+        
         usleep (UInt32(sleep_time))
-        sampler!.stopNote(note, onChannel: 0)
+            if (amount > 0.01){
+                    sampler!.stopNote(note, onChannel: 1)
+            }
         self.lock = false
         }
     }
@@ -204,16 +201,17 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         }
     }
     
+
     
    func captureOutput(captureOutput: AVCaptureOutput!, didOutputSampleBuffer sampleBuffer: CMSampleBuffer!, fromConnection connection: AVCaptureConnection!)
     {
-        let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
-        let context = CIContext(options:nil)
-        let cameraImage = CIImage(CVPixelBuffer: pixelBuffer!)
-        let cgImg = context.createCGImage(cameraImage, fromRect: cameraImage.extent)
+        pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
+        context = CIContext(options:nil)
+        cameraImage = CIImage(CVPixelBuffer: pixelBuffer!)
+        cgImg = context!.createCGImage(cameraImage!, fromRect: cameraImage!.extent)
         dispatch_async(dispatch_get_main_queue())
             {
-                self.getPixels(cgImg)
+                self.getPixels()
         }
         
     }
@@ -261,15 +259,17 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         self.mute_mode = !(self.mute_mode!)
     }
     
+   
     
-    func getPixels(image: CGImageRef ){
+    func getPixels(){
         if (!processImgLock! && !lock!){
             processImgLock = true
             
-        let width = CGImageGetWidth(image)
-        let height = CGImageGetHeight(image)
-        let pixelData = CGDataProviderCopyData(CGImageGetDataProvider(image))
-        let pixels: UnsafePointer<UInt8> = CFDataGetBytePtr(pixelData)
+        let width = CGImageGetWidth(self.cgImg!)
+        let height = CGImageGetHeight(self.cgImg!)
+    
+        pixelData = CGDataProviderCopyData(CGImageGetDataProvider(self.cgImg!))
+        pixels = CFDataGetBytePtr(pixelData)
         var sum_red = 0
         var sum_green = 0
         var sum_blue = 0
@@ -287,9 +287,9 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             for y in y_min ... y_max {
                 //Here is your raw pixels
                 let offset = 4*((Int(width) * Int(y)) + Int(x))
-                let red = pixels[offset]
-                let green = pixels[offset+1]
-                let blue = pixels[offset+2]
+                let red = pixels![offset]
+                let green = pixels![offset+1]
+                let blue = pixels![offset+2]
                 sum_red = sum_red + Int(red)
                 sum_green = sum_green + Int(green)
                 sum_blue = sum_blue + Int(blue)

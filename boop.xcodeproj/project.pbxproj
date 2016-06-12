@@ -15,15 +15,7 @@
 		02074DB91C814C5F007A5B7E /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 02074DB81C814C5F007A5B7E /* AudioToolbox.framework */; };
 		02074DBB1C814C6B007A5B7E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 02074DBA1C814C6B007A5B7E /* UIKit.framework */; };
 		02074DBD1C814C76007A5B7E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 02074DBC1C814C76007A5B7E /* Foundation.framework */; };
-		02074DCA1C821D41007A5B7E /* yourAudioFileName.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 02074DC91C821D41007A5B7E /* yourAudioFileName.mp3 */; };
 		02074DCC1C824952007A5B7E /* MediaAccessibility.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 02074DCB1C824952007A5B7E /* MediaAccessibility.framework */; };
-		02074DD21C824DBF007A5B7E /* blip_2_1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 02074DCD1C824DBF007A5B7E /* blip_2_1.mp3 */; };
-		02074DD31C824DBF007A5B7E /* blip_2_2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 02074DCE1C824DBF007A5B7E /* blip_2_2.mp3 */; };
-		02074DD41C824DBF007A5B7E /* blip_2_3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 02074DCF1C824DBF007A5B7E /* blip_2_3.mp3 */; };
-		02074DD51C824DBF007A5B7E /* blip_2_4.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 02074DD01C824DBF007A5B7E /* blip_2_4.mp3 */; };
-		02074DD61C824DBF007A5B7E /* blip_2_5.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 02074DD11C824DBF007A5B7E /* blip_2_5.mp3 */; };
-		02074DD91C8264DE007A5B7E /* blip_2_2_f3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 02074DD71C8264DE007A5B7E /* blip_2_2_f3.mp3 */; };
-		02074DDA1C8264DE007A5B7E /* blip_2_115_f2.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 02074DD81C8264DE007A5B7E /* blip_2_115_f2.mp3 */; };
 		02074DDC1C826930007A5B7E /* Icon-120.png in Resources */ = {isa = PBXBuildFile; fileRef = 02074DDB1C826930007A5B7E /* Icon-120.png */; };
 /* End PBXBuildFile section */
 
@@ -39,15 +31,7 @@
 		02074DBA1C814C6B007A5B7E /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		02074DBC1C814C76007A5B7E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		02074DC01C81F38C007A5B7E /* boop-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "boop-Bridging-Header.h"; sourceTree = "<group>"; };
-		02074DC91C821D41007A5B7E /* yourAudioFileName.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = yourAudioFileName.mp3; sourceTree = "<group>"; };
 		02074DCB1C824952007A5B7E /* MediaAccessibility.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaAccessibility.framework; path = System/Library/Frameworks/MediaAccessibility.framework; sourceTree = SDKROOT; };
-		02074DCD1C824DBF007A5B7E /* blip_2_1.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = blip_2_1.mp3; sourceTree = "<group>"; };
-		02074DCE1C824DBF007A5B7E /* blip_2_2.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = blip_2_2.mp3; sourceTree = "<group>"; };
-		02074DCF1C824DBF007A5B7E /* blip_2_3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = blip_2_3.mp3; sourceTree = "<group>"; };
-		02074DD01C824DBF007A5B7E /* blip_2_4.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = blip_2_4.mp3; sourceTree = "<group>"; };
-		02074DD11C824DBF007A5B7E /* blip_2_5.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = blip_2_5.mp3; sourceTree = "<group>"; };
-		02074DD71C8264DE007A5B7E /* blip_2_2_f3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = blip_2_2_f3.mp3; sourceTree = "<group>"; };
-		02074DD81C8264DE007A5B7E /* blip_2_115_f2.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = blip_2_115_f2.mp3; sourceTree = "<group>"; };
 		02074DDB1C826930007A5B7E /* Icon-120.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-120.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -90,14 +74,6 @@
 			isa = PBXGroup;
 			children = (
 				02074DDB1C826930007A5B7E /* Icon-120.png */,
-				02074DD71C8264DE007A5B7E /* blip_2_2_f3.mp3 */,
-				02074DD81C8264DE007A5B7E /* blip_2_115_f2.mp3 */,
-				02074DCD1C824DBF007A5B7E /* blip_2_1.mp3 */,
-				02074DCE1C824DBF007A5B7E /* blip_2_2.mp3 */,
-				02074DCF1C824DBF007A5B7E /* blip_2_3.mp3 */,
-				02074DD01C824DBF007A5B7E /* blip_2_4.mp3 */,
-				02074DD11C824DBF007A5B7E /* blip_2_5.mp3 */,
-				02074DC91C821D41007A5B7E /* yourAudioFileName.mp3 */,
 				02074DA61C814BEE007A5B7E /* AppDelegate.swift */,
 				02074DA81C814BEE007A5B7E /* ViewController.swift */,
 				02074DAA1C814BEE007A5B7E /* Main.storyboard */,
@@ -168,17 +144,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				02074DD91C8264DE007A5B7E /* blip_2_2_f3.mp3 in Resources */,
-				02074DCA1C821D41007A5B7E /* yourAudioFileName.mp3 in Resources */,
-				02074DD31C824DBF007A5B7E /* blip_2_2.mp3 in Resources */,
 				02074DB11C814BEE007A5B7E /* LaunchScreen.storyboard in Resources */,
 				02074DDC1C826930007A5B7E /* Icon-120.png in Resources */,
-				02074DD21C824DBF007A5B7E /* blip_2_1.mp3 in Resources */,
-				02074DD61C824DBF007A5B7E /* blip_2_5.mp3 in Resources */,
 				02074DAE1C814BEE007A5B7E /* Assets.xcassets in Resources */,
-				02074DD51C824DBF007A5B7E /* blip_2_4.mp3 in Resources */,
-				02074DDA1C8264DE007A5B7E /* blip_2_115_f2.mp3 in Resources */,
-				02074DD41C824DBF007A5B7E /* blip_2_3.mp3 in Resources */,
 				02074DAC1C814BEE007A5B7E /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
