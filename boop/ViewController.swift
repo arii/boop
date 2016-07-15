@@ -107,7 +107,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     
     
     func update() {
-        if (self.lock!){
+        if (self.lock! && setup!){
             NSLog("locked")
         } else{
             
