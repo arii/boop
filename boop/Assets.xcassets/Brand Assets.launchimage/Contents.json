@@ -1,12 +1,6 @@
 {
   "images" : [
-    {
-      "orientation" : "portrait",
-      "idiom" : "iphone",
-      "filename" : "Icon-120.png",
-      "minimum-system-version" : "7.0",
-      "scale" : "2x"
-    }
+
   ],
   "info" : {
     "version" : 1,

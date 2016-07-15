@@ -61,8 +61,7 @@
                                         <exclude reference="Awq-Ba-RPG"/>
                                     </mask>
                                 </variation>
-                                <variation key="heightClass=regular" misplaced="YES">
-                                    <rect key="frame" x="149" y="238" width="302" height="134"/>
+                                <variation key="heightClass=regular">
                                     <mask key="constraints">
                                         <include reference="Awq-Ba-RPG"/>
                                     </mask>
@@ -81,26 +80,12 @@
                                         <exclude reference="SOs-SV-f6e"/>
                                     </mask>
                                 </variation>
-                                <variation key="heightClass=regular" misplaced="YES">
-                                    <rect key="frame" x="180" y="429" width="240" height="203"/>
+                                <variation key="heightClass=regular">
                                     <mask key="constraints">
                                         <include reference="SOs-SV-f6e"/>
                                     </mask>
                                 </variation>
                             </imageView>
-                            <switch opaque="NO" multipleTouchEnabled="YES" contentMode="scaleToFill" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="250" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dO0-2w-9Zc">
-                                <rect key="frame" x="-25" y="-15" width="51" height="31"/>
-                                <accessibility key="accessibilityConfiguration">
-                                    <accessibilityTraits key="traits" button="YES" notEnabled="YES"/>
-                                </accessibility>
-                                <rect key="contentStretch" x="1" y="1" width="1" height="1"/>
-                                <variation key="heightClass=regular" misplaced="YES">
-                                    <rect key="frame" x="276" y="574" width="51" height="206"/>
-                                </variation>
-                                <connections>
-                                    <action selector="vibrate_toggle:" destination="BYZ-38-t0r" eventType="valueChanged" id="XJV-aN-ejG"/>
-                                </connections>
-                            </switch>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Vibrate Mode is On" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UFa-mp-HbC">
                                 <rect key="frame" x="-42" y="-21" width="42" height="21"/>
                                 <accessibility key="accessibilityConfiguration">
@@ -109,10 +94,17 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="31"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
-                                <variation key="heightClass=regular" misplaced="YES">
-                                    <rect key="frame" x="160" y="763" width="262" height="37"/>
-                                </variation>
                             </label>
+                            <switch opaque="NO" multipleTouchEnabled="YES" contentMode="scaleToFill" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="250" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dO0-2w-9Zc">
+                                <rect key="frame" x="-25" y="-15" width="51" height="31"/>
+                                <accessibility key="accessibilityConfiguration">
+                                    <accessibilityTraits key="traits" button="YES" notEnabled="YES"/>
+                                </accessibility>
+                                <rect key="contentStretch" x="1" y="1" width="1" height="1"/>
+                                <connections>
+                                    <action selector="vibrate_toggle:" destination="BYZ-38-t0r" eventType="valueChanged" id="XJV-aN-ejG"/>
+                                </connections>
+                            </switch>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
@@ -121,7 +113,6 @@
                             <constraint firstItem="UFa-mp-HbC" firstAttribute="bottom" secondItem="8bC-Xf-vdC" secondAttribute="bottom" id="FY4-lD-hd3"/>
                             <constraint firstItem="fL5-jv-s3F" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="ZHE-eR-Jpg"/>
                             <constraint firstItem="tp6-3R-riv" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="27" id="b41-cV-ThD"/>
-                            <constraint firstItem="fQv-QA-dzP" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="dO0-2w-9Zc" secondAttribute="top" id="m9K-OH-jbn"/>
                             <constraint firstItem="fQv-QA-dzP" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="qhd-Wk-ekG"/>
                             <constraint firstItem="UFa-mp-HbC" firstAttribute="top" secondItem="dO0-2w-9Zc" secondAttribute="bottom" id="qhh-er-Hp3"/>
                             <constraint firstItem="fL5-jv-s3F" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="rK2-3w-pza"/>
@@ -130,15 +121,14 @@
                         </constraints>
                         <variation key="default">
                             <mask key="subviews">
-                                <exclude reference="dO0-2w-9Zc"/>
                                 <exclude reference="UFa-mp-HbC"/>
+                                <exclude reference="dO0-2w-9Zc"/>
                             </mask>
                             <mask key="constraints">
                                 <exclude reference="b41-cV-ThD"/>
                                 <exclude reference="wmF-gj-qrw"/>
                                 <exclude reference="ZHE-eR-Jpg"/>
                                 <exclude reference="rK2-3w-pza"/>
-                                <exclude reference="m9K-OH-jbn"/>
                                 <exclude reference="qhd-Wk-ekG"/>
                                 <exclude reference="ux0-aO-AEb"/>
                                 <exclude reference="DyV-Fw-18n"/>
@@ -149,15 +139,14 @@
                         </variation>
                         <variation key="heightClass=regular">
                             <mask key="subviews">
-                                <include reference="dO0-2w-9Zc"/>
                                 <include reference="UFa-mp-HbC"/>
+                                <include reference="dO0-2w-9Zc"/>
                             </mask>
                             <mask key="constraints">
                                 <include reference="b41-cV-ThD"/>
                                 <include reference="wmF-gj-qrw"/>
                                 <include reference="ZHE-eR-Jpg"/>
                                 <include reference="rK2-3w-pza"/>
-                                <include reference="m9K-OH-jbn"/>
                                 <include reference="qhd-Wk-ekG"/>
                                 <include reference="ux0-aO-AEb"/>
                                 <include reference="DyV-Fw-18n"/>
