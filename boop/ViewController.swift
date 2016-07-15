@@ -11,11 +11,12 @@ import AudioToolbox
 import AVFoundation
 import Darwin
 
-
+// two finger scrub to toggle vibrate enable on or off
 
 class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate{
 
-    @IBOutlet weak var vibrate_enable: UIButton!
+    @IBOutlet weak var vibrate_label: UILabel!
+    //@IBOutlet weak var vibrate_enable: UIButton!
    // @IBOutlet weak var hi: UIButton!
     var mySound: AVAudioPlayer?
    // @IBOutlet weak var capturedImage: UIImageView!
@@ -41,7 +42,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     
     
     var backCamera: AVCaptureDevice?
-    var mute_mode : Bool?
+    //var mute_mode : Bool?
     var lastBuzz: Double?
 
     
@@ -56,6 +57,9 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     var lock : Bool?
     var processImgLock : Bool?
     
+    
+    @IBOutlet weak var do_vibrate: UISwitch!
+    
     @IBOutlet weak var luminance: UILabel!
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -66,7 +70,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         
         self.prev_lum1 = 0.0
         self.prev_lum = 0.0
-        self.mute_mode = false
+     //   self.mute_mode = false
         
 
         NSLog("Hello world! Loaded Program!")
@@ -101,19 +105,18 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         sampler!.startNote(note, withVelocity: velocity, onChannel: 1)
     }
     
-    override func accessibilityPerformMagicTap() -> Bool {
-        exit(0)
-    }
+  
     
     
     func update() {
+        
         if (self.lock! && setup!){
             NSLog("locked")
         } else{
             
             self.lock = true
             
-
+        
 
         var amount = (self.prev_lum! + self.prev_lum1!)/2
         let iso = Double((self.backCamera?.ISO)!)
@@ -142,7 +145,9 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             if (amount > 0.01){
                 self.play(note,velocity:vol )
                 let currentDateTime = NSDate().timeIntervalSince1970
-               if (self.mute_mode! && ((currentDateTime - self.lastBuzz!) > vibe_sleep_time)){
+            if (self.do_vibrate.on && ((currentDateTime - self.lastBuzz!) > vibe_sleep_time)){
+
+             //XXX  if (self.mute_mode! && ((currentDateTime - self.lastBuzz!) > vibe_sleep_time)){
 
                     AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
                     self.lastBuzz = currentDateTime
@@ -177,6 +182,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         } catch let error1 as NSError {
             error = error1
             input = nil
+            NSLog("hi ari I had error!!!")
         }
         let videoOutput = AVCaptureVideoDataOutput()
         videoOutput.setSampleBufferDelegate(self, queue: dispatch_queue_create("sample buffer delegate", DISPATCH_QUEUE_SERIAL))
@@ -228,28 +234,52 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         // Dispose of any resources that can be recreated.
     }
 
-    
+    /*
     func GotoProfile(){
        // self.performSegueWithIdentifier("Profilesegue", sender: nil)
         self.toggle()
-    }
-    
-    override func accessibilityPerformEscape() -> Bool {
-        self.toggle()
-        return true
+    }*/
+
+    override func accessibilityPerformMagicTap() -> Bool {
+
+        exit(0)
         
     }
-
     
+
+    override func accessibilityPerformEscape() -> Bool {
+        if (self.do_vibrate.on){
+            self.vibrate_label.text = "Vibrate mode is off"
+            self.do_vibrate.setOn(false, animated: true)
+        }else{
+            self.do_vibrate.setOn(true, animated: true)
+
+            self.vibrate_label.text = "Vibrate mode is on"
+
+        }
+        return true
+    }
+    
+    @IBAction func vibrate_toggle(sender: AnyObject) {
+        if (self.do_vibrate.on){
+            self.vibrate_label.text = "Vibrate mode is on"
+           // self.vibrate_enable.setTitle("Vibrate On",forState: UIControlState.Normal)
+        }else{
+            self.vibrate_label.text = "Vibrate mode is off"
+
+            //self.vibrate_enable.setTitle("Vibrate Off", forState:UIControlState.Normal)
+        }
+    }
+    /*
     @IBAction func toggle_mute(sender: AnyObject) {
         if (self.mute_mode!){
-            self.vibrate_enable.setTitle("Enable Vibrate",forState: UIControlState.Normal)
+            self.vibrate_enable.setTitle("Vibrate On",forState: UIControlState.Normal)
         }else{
-            self.vibrate_enable.setTitle("Disable Vibrate", forState:UIControlState.Normal)
+            self.vibrate_enable.setTitle("Vibrate Off", forState:UIControlState.Normal)
         }
         self.mute_mode = !(self.mute_mode!)
     }
-    
+
     func toggle(){
         if (self.mute_mode!){
             self.vibrate_enable.setTitle("Enable Vibrate",forState: UIControlState.Normal)
@@ -257,7 +287,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             self.vibrate_enable.setTitle("Disable Vibrate", forState:UIControlState.Normal)
         }
         self.mute_mode = !(self.mute_mode!)
-    }
+    }*/
     
    
     

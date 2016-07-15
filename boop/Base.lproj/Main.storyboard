@@ -15,37 +15,15 @@
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
                     </layoutGuides>
                     <view key="view" contentMode="center" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="800"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SIG-SI-gSL">
-                                <rect key="frame" x="0.0" y="670" width="13" height="4"/>
-                                <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="600" id="31S-od-Ct4"/>
-                                    <constraint firstAttribute="height" constant="78" id="VkJ-h2-yZI"/>
-                                </constraints>
-                                <state key="normal" title="Enable Vibrate"/>
-                                <variation key="default">
-                                    <mask key="constraints">
-                                        <exclude reference="31S-od-Ct4"/>
-                                        <exclude reference="VkJ-h2-yZI"/>
-                                    </mask>
-                                </variation>
-                                <variation key="heightClass=regular" misplaced="YES">
-                                    <rect key="frame" x="0.0" y="675" width="600" height="78"/>
-                                    <mask key="constraints">
-                                        <include reference="31S-od-Ct4"/>
-                                        <include reference="VkJ-h2-yZI"/>
-                                    </mask>
-                                </variation>
-                                <connections>
-                                    <action selector="toggle_mute:" destination="BYZ-38-t0r" eventType="touchUpInside" id="VCC-LQ-qCH"/>
-                                </connections>
-                            </button>
-                            <view contentMode="scaleToFill" horizontalHuggingPriority="249" verticalHuggingPriority="251" fixedFrame="YES" placeholderIntrinsicWidth="244" placeholderIntrinsicHeight="171" translatesAutoresizingMaskIntoConstraints="NO" id="tp6-3R-riv">
+                            <view contentMode="scaleToFill" horizontalHuggingPriority="249" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" placeholderIntrinsicWidth="244" placeholderIntrinsicHeight="171" translatesAutoresizingMaskIntoConstraints="NO" id="tp6-3R-riv">
                                 <rect key="frame" x="39" y="48" width="244" height="171"/>
                                 <color key="backgroundColor" red="0.098039217289999994" green="0.098039217289999994" blue="0.098039217289999994" alpha="1" colorSpace="calibratedRGB"/>
+                                <accessibility key="accessibilityConfiguration" label="displays captured video">
+                                    <accessibilityTraits key="traits" notEnabled="YES"/>
+                                </accessibility>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="171" id="JGD-ln-8eV"/>
                                     <constraint firstAttribute="width" constant="244" id="MyG-xH-PZH"/>
@@ -66,17 +44,35 @@
                                     </mask>
                                 </variation>
                             </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="center" semanticContentAttribute="spatial" verticalHuggingPriority="252" fixedFrame="YES" text="0" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fL5-jv-s3F">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="center" semanticContentAttribute="spatial" verticalHuggingPriority="252" ambiguous="YES" misplaced="YES" text="0" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fL5-jv-s3F">
                                 <rect key="frame" x="10" y="212" width="302" height="134"/>
+                                <accessibility key="accessibilityConfiguration">
+                                    <accessibilityTraits key="traits" staticText="YES" notEnabled="YES" updatesFrequently="YES"/>
+                                    <bool key="isElement" value="YES"/>
+                                </accessibility>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="302" id="Awq-Ba-RPG"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="61"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="Awq-Ba-RPG"/>
+                                    </mask>
+                                </variation>
                                 <variation key="heightClass=regular" misplaced="YES">
                                     <rect key="frame" x="149" y="238" width="302" height="134"/>
+                                    <mask key="constraints">
+                                        <include reference="Awq-Ba-RPG"/>
+                                    </mask>
                                 </variation>
                             </label>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="Icon-120.png" translatesAutoresizingMaskIntoConstraints="NO" id="fQv-QA-dzP">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" image="Icon-120.png" translatesAutoresizingMaskIntoConstraints="NO" id="fQv-QA-dzP">
                                 <rect key="frame" x="41" y="337" width="240" height="203"/>
+                                <accessibility key="accessibilityConfiguration" label="Boop Icon">
+                                    <accessibilityTraits key="traits" image="YES" notEnabled="YES"/>
+                                </accessibility>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="fQv-QA-dzP" secondAttribute="height" multiplier="240:203" id="SOs-SV-f6e"/>
                                 </constraints>
@@ -92,49 +88,93 @@
                                     </mask>
                                 </variation>
                             </imageView>
+                            <switch opaque="NO" multipleTouchEnabled="YES" contentMode="scaleToFill" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="250" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dO0-2w-9Zc">
+                                <rect key="frame" x="-25" y="-15" width="51" height="31"/>
+                                <accessibility key="accessibilityConfiguration">
+                                    <accessibilityTraits key="traits" button="YES" notEnabled="YES"/>
+                                </accessibility>
+                                <rect key="contentStretch" x="1" y="1" width="1" height="1"/>
+                                <variation key="heightClass=regular" misplaced="YES">
+                                    <rect key="frame" x="276" y="574" width="51" height="206"/>
+                                </variation>
+                                <connections>
+                                    <action selector="erg:" destination="BYZ-38-t0r" eventType="primaryActionTriggered" id="yDj-gA-o5f"/>
+                                    <action selector="vibrate_toggle:" destination="BYZ-38-t0r" eventType="valueChanged" id="XJV-aN-ejG"/>
+                                </connections>
+                            </switch>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Vibrate Mode is On" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UFa-mp-HbC">
+                                <rect key="frame" x="-42" y="-21" width="42" height="21"/>
+                                <accessibility key="accessibilityConfiguration">
+                                    <accessibilityTraits key="traits" staticText="YES" notEnabled="YES"/>
+                                </accessibility>
+                                <fontDescription key="fontDescription" type="system" pointSize="31"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                                <variation key="heightClass=regular" misplaced="YES">
+                                    <rect key="frame" x="160" y="763" width="262" height="37"/>
+                                </variation>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="UFa-mp-HbC" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="DFn-CW-he4"/>
+                            <constraint firstItem="dO0-2w-9Zc" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="DyV-Fw-18n"/>
+                            <constraint firstItem="UFa-mp-HbC" firstAttribute="bottom" secondItem="8bC-Xf-vdC" secondAttribute="bottom" id="FY4-lD-hd3"/>
                             <constraint firstItem="fL5-jv-s3F" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="ZHE-eR-Jpg"/>
                             <constraint firstItem="tp6-3R-riv" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="27" id="b41-cV-ThD"/>
-                            <constraint firstItem="SIG-SI-gSL" firstAttribute="top" secondItem="fQv-QA-dzP" secondAttribute="bottom" id="lu8-R5-qxG"/>
+                            <constraint firstItem="fQv-QA-dzP" firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="dO0-2w-9Zc" secondAttribute="top" id="m9K-OH-jbn"/>
                             <constraint firstItem="fQv-QA-dzP" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="qhd-Wk-ekG"/>
+                            <constraint firstItem="UFa-mp-HbC" firstAttribute="top" secondItem="dO0-2w-9Zc" secondAttribute="bottom" id="qhh-er-Hp3"/>
                             <constraint firstItem="fL5-jv-s3F" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="rK2-3w-pza"/>
                             <constraint firstItem="fQv-QA-dzP" firstAttribute="top" secondItem="fL5-jv-s3F" secondAttribute="bottom" id="ux0-aO-AEb"/>
-                            <constraint firstItem="SIG-SI-gSL" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="wj7-Z1-fqU"/>
                             <constraint firstItem="tp6-3R-riv" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="wmF-gj-qrw"/>
                         </constraints>
                         <variation key="default">
+                            <mask key="subviews">
+                                <exclude reference="dO0-2w-9Zc"/>
+                                <exclude reference="UFa-mp-HbC"/>
+                            </mask>
                             <mask key="constraints">
                                 <exclude reference="b41-cV-ThD"/>
                                 <exclude reference="wmF-gj-qrw"/>
                                 <exclude reference="ZHE-eR-Jpg"/>
                                 <exclude reference="rK2-3w-pza"/>
+                                <exclude reference="m9K-OH-jbn"/>
                                 <exclude reference="qhd-Wk-ekG"/>
                                 <exclude reference="ux0-aO-AEb"/>
-                                <exclude reference="lu8-R5-qxG"/>
-                                <exclude reference="wj7-Z1-fqU"/>
+                                <exclude reference="DyV-Fw-18n"/>
+                                <exclude reference="DFn-CW-he4"/>
+                                <exclude reference="FY4-lD-hd3"/>
+                                <exclude reference="qhh-er-Hp3"/>
                             </mask>
                         </variation>
                         <variation key="heightClass=regular">
+                            <mask key="subviews">
+                                <include reference="dO0-2w-9Zc"/>
+                                <include reference="UFa-mp-HbC"/>
+                            </mask>
                             <mask key="constraints">
                                 <include reference="b41-cV-ThD"/>
                                 <include reference="wmF-gj-qrw"/>
                                 <include reference="ZHE-eR-Jpg"/>
                                 <include reference="rK2-3w-pza"/>
+                                <include reference="m9K-OH-jbn"/>
                                 <include reference="qhd-Wk-ekG"/>
                                 <include reference="ux0-aO-AEb"/>
-                                <include reference="lu8-R5-qxG"/>
-                                <include reference="wj7-Z1-fqU"/>
+                                <include reference="DyV-Fw-18n"/>
+                                <include reference="DFn-CW-he4"/>
+                                <include reference="FY4-lD-hd3"/>
+                                <include reference="qhh-er-Hp3"/>
                             </mask>
                         </variation>
                     </view>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="600" height="800"/>
                     <connections>
+                        <outlet property="do_vibrate" destination="dO0-2w-9Zc" id="BXf-Zb-AUg"/>
                         <outlet property="luminance" destination="fL5-jv-s3F" id="69G-Ig-tcH"/>
                         <outlet property="previewView" destination="tp6-3R-riv" id="FNs-i9-3a0"/>
-                        <outlet property="vibrate_enable" destination="SIG-SI-gSL" id="6SC-jR-RfV"/>
+                        <outlet property="vibrate_label" destination="UFa-mp-HbC" id="s4k-gA-ISO"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
