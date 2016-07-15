@@ -57,6 +57,8 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     var lock : Bool?
     var processImgLock : Bool?
     
+    var loaded:Bool?
+    
     
     @IBOutlet weak var do_vibrate: UISwitch!
     
@@ -64,16 +66,16 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let swipe: UISwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: "GotoProfile")
+        /*let swipe: UISwipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: "GotoProfile")
         swipe.direction = UISwipeGestureRecognizerDirection.Down
-        self.view.addGestureRecognizer(swipe)
+        self.view.addGestureRecognizer(swipe)*/
         
         self.prev_lum1 = 0.0
         self.prev_lum = 0.0
      //   self.mute_mode = false
         
 
-        NSLog("Hello world! Loaded Program!")
+       /* NSLog("Hello world! Loaded Program!")
         self.audioEngine = AVAudioEngine()
         AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
         AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
@@ -93,9 +95,12 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             try   self.audioEngine?.start()
         }catch let error2 as NSError{
             error = error2
+            self.loaded = false
             NSLog(error!.description)
         }
-        self.updater = NSTimer.scheduledTimerWithTimeInterval( 0.07, target: self, selector: "update", userInfo: nil, repeats: true)
+        if (self.loaded!){
+            self.updater = NSTimer.scheduledTimerWithTimeInterval( 0.07, target: self, selector: "update", userInfo: nil, repeats: true)
+        }*/
         
 
     }
@@ -167,8 +172,11 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     }
     
   override func viewWillAppear(animated: Bool) {
+        NSLog("i am here")
         super.viewWillAppear(animated)
         setup = false
+        self.loaded = true
+    
         
         captureSession = AVCaptureSession()
         captureSession!.sessionPreset = AVCaptureSessionPreset352x288
@@ -182,7 +190,8 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         } catch let error1 as NSError {
             error = error1
             input = nil
-            NSLog("hi ari I had error!!!")
+            NSLog("Camera error")
+            self.loaded = false
         }
         let videoOutput = AVCaptureVideoDataOutput()
         videoOutput.setSampleBufferDelegate(self, queue: dispatch_queue_create("sample buffer delegate", DISPATCH_QUEUE_SERIAL))
@@ -205,6 +214,34 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
                 setup = true
             }
         }
+    
+    NSLog("Hello world! Loaded Program!")
+    self.audioEngine = AVAudioEngine()
+    AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
+    AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
+    AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
+    
+    
+    self.lastBuzz =   NSDate().timeIntervalSince1970
+    self.lock = false
+    self.processImgLock = false
+    
+    mixer = self.audioEngine?.mainMixerNode
+    sampler = AVAudioUnitSampler()
+    self.audioEngine?.attachNode(sampler!)
+    self.audioEngine?.connect(sampler!, to: mixer!, format: sampler!.outputFormatForBus(0))
+    do{
+        try   self.audioEngine?.start()
+    }catch let error2 as NSError{
+        error = error2
+        self.loaded = false
+        NSLog(error!.description)
+    }
+    if (self.loaded!){
+        self.updater = NSTimer.scheduledTimerWithTimeInterval( 0.07, target: self, selector: "update", userInfo: nil, repeats: true)
+    }else {
+        self.vibrate_label.text="camera & sound error"
+    }
     }
     
 
@@ -248,6 +285,8 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     
 
     override func accessibilityPerformEscape() -> Bool {
+        if (self.loaded!){
+
         if (self.do_vibrate.on){
             self.vibrate_label.text = "Vibrate mode is off"
             self.do_vibrate.setOn(false, animated: true)
@@ -257,10 +296,12 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             self.vibrate_label.text = "Vibrate mode is on"
 
         }
+        }
         return true
     }
     
     @IBAction func vibrate_toggle(sender: AnyObject) {
+        if (self.loaded!){
         if (self.do_vibrate.on){
             self.vibrate_label.text = "Vibrate mode is on"
            // self.vibrate_enable.setTitle("Vibrate On",forState: UIControlState.Normal)
@@ -268,6 +309,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             self.vibrate_label.text = "Vibrate mode is off"
 
             //self.vibrate_enable.setTitle("Vibrate Off", forState:UIControlState.Normal)
+        }
         }
     }
     /*

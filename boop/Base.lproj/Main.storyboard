@@ -98,7 +98,6 @@
                                     <rect key="frame" x="276" y="574" width="51" height="206"/>
                                 </variation>
                                 <connections>
-                                    <action selector="erg:" destination="BYZ-38-t0r" eventType="primaryActionTriggered" id="yDj-gA-o5f"/>
                                     <action selector="vibrate_toggle:" destination="BYZ-38-t0r" eventType="valueChanged" id="XJV-aN-ejG"/>
                                 </connections>
                             </switch>
