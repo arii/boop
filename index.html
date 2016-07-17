@@ -22,7 +22,7 @@
       <h3>
 <a id="boop-light-detector-app" class="anchor" href="#boop-light-detector-app" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Boop Light Detector App</h3>
 
-<p>Boop is an an app developed for iOS users (8.0 and above) to detect levels of light and transmit this information with sound. It allows its blind and visually impaired users to detect if lights are on or off. Its wide range of detection enables it to detect small differences of light, such as if the indicator light is on for a wifi router. </p>
+<p>Boop is an an app developed for iOS users (8.0 and above) to detect levels of light and interpret this information with sound. It allows its blind and visually impaired users to detect whether lights are on or off. It covers a broad range of light levels which span from sensing daylight through open windows to checking whether the indicator light is on for a wifi router.</p>
 
 <p>Boop does not require any additional hardware and has been tested on a variety of different phones (4s-6s) in addition to iPads. </p>
 
@@ -35,53 +35,53 @@
 
 <ul>
 <li>Boop is free</li>
-<li>Boop has a larger range of light detection by using more than raw lumincense computation from pixels.  We also factor in the camera exposure and sensitivity leading to a robust light detection that's insensitive to varying lighting conditions and provides higher resolution than its competitors.</li>
+<li>Boop provides a larger range of light detection by using more than simple pixel values from the camera.  We also factor in the camera exposure and sensitivity levels, leading to a robust light detection that's insensitive to varying lighting conditions or high contrast and provides higher resolution than its competitors.</li>
 <li>Boop is fast and responsive.  Our app consists of one single screen and uses an asynchronous system to simultaneous track light levels and send quick, audible feedback.</li>
-<li>Boop was developed while testing the accessibility voice over features.  We make use of the gestures and have the familiar magic (or two finger double tap) to exit the app</li>
-<li>Last, and possibly most importantly, we have a vibrate feature for using the app in quiet areas.  Based on the frequency of vibrations, you can estimate the light intensity.</li>
+<li>Boop was developed with the accessibility voice over features in mind.  We make use of the gestures and have the familiar magic touch (or two finger double tap) to exit the app.</li>
+<li>Last, and possibly most importantly, we have a vibrate feature for using the app in quiet areas.  Based on the frequency of vibrations, you can estimate light intensity and source location.</li>
 </ul>
 
 <h2>
 <a id="how-to-use-boop" class="anchor" href="#how-to-use-boop" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>How to use Boop</h2>
 
 <h3>
-<a id="screen-overview" class="anchor" href="#screen-overview" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>screen overview</h3>
+<a id="screen-overview" class="anchor" href="#screen-overview" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Screen Overview</h3>
 
-<p>The following are 4 screenshots taken while using loop. The app is structured as follows: display of video capture on top, reading of luminescence in the middle, and a toggle vibrate button on the bottom.  All items are centered in the screen and easy to access.  </p>
+<p>The following are 4 screenshots taken while using Boop. The app is structured as follows: display of video capture on top, reading of luminescence in the middle, and a toggle vibrate button at the bottom.  All items are centered in the screen and easy to access.  </p>
 
 <p><img src="https://github.com/arii/boop/blob/master/screenshots/1.PNG?raw=true" alt="Screenshot 1 - low visibility ">
 <img src="https://github.com/arii/boop/blob/master/screenshots/2.PNG?raw=true" alt="Screenshot 2 - medium low visibility ">
 <img src="https://github.com/arii/boop/blob/master/screenshots/3.PNG?raw=true" alt="Screenshot 2 - medium high visibility ">
 <img src="https://github.com/arii/boop/blob/master/screenshots/4.PNG?raw=true" alt="Screenshot 3 - high visibility "></p>
 
-<p>This app is supposed to tell you where the light is.  Therefore, the camera needs to be lined up with the light.  In the 3rd and 4th screenshot, the ceiling lamp is within the capture view. However, the 4th screenshot has the lamp centered and has a much higher luminescence reading (which goes from 0 - 100) .</p>
+<p>This app can help you determine where a light source is located.  To help achieve this directional sensing, only the light level at the center of the video screen (directly perpendicular to the phone face) is measured.  In the 3rd and 4th screenshot, the ceiling lamp is within the capture view. However, the 4th screenshot has the lamp centered and has a much higher luminescence reading (which goes from 0 - 100) .</p>
 
 <h3>
-<a id="starting-the-app" class="anchor" href="#starting-the-app" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>starting the app</h3>
+<a id="starting-the-app" class="anchor" href="#starting-the-app" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Starting the App</h3>
 
-<p>Use the default iOS navigation to open Boop.  When Boop starts you will feel a sequence of 3 vibration pulses to let you know it's now running. </p>
+<p>Use the default iOS navigation to open Boop.  When Boop starts you will feel a sequence of 3 vibration pulses to let you know it is running. </p>
 
 <p>The first time using the app, you will need to give it permission to access your camera. If you don't do this then the app will display an error at the bottom of the screen.  Manually go into your settings and enable Boop's access to your camera.</p>
 
 <h3>
-<a id="closing-the-app" class="anchor" href="#closing-the-app" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>closing the app</h3>
+<a id="closing-the-app" class="anchor" href="#closing-the-app" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Closing the App</h3>
 
-<p>The app shutdowns whenever you exit out of it to preserve your phone's memory and battery life. To exit the app hit the home key.
+<p>The app shuts down whenever you exit out of it to preserve your phone's memory and battery life. To exit the app hit the home key.
 <strong>Voice Over users:</strong> In addition to using the home key to shutdown the app, you can use the "magic tap" or two finger double tap to exit.</p>
 
 <h3>
-<a id="vibrate-on-or-off" class="anchor" href="#vibrate-on-or-off" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>vibrate on or off</h3>
+<a id="vibrate-on-or-off" class="anchor" href="#vibrate-on-or-off" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Vibrate On or Off</h3>
 
-<p>There is only one feature you can change with the app: vibrate on or of.  To do this, toggle the button at the bottom-center of the screen. 
+<p>The main feature you can change in the app is vibrate on or off.  To do this, toggle the button at the bottom-center of the screen. 
 <strong>Voice Over users:</strong> In addition to toggling the vibrate switch, you can use the "Two-finger scrub" as well on any part of the screen.  This is the Z-shaped gesture, also called an Escape, performed with two fingers.</p>
 
 <h3>
-<a id="volume-control" class="anchor" href="#volume-control" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>volume control</h3>
+<a id="volume-control" class="anchor" href="#volume-control" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Volume Control</h3>
 
-<p>The volume can be controlled by the volume keys at the side of the phone .  You can make the overall volume higher or lower.  Additionally, the mute switch will shut off any sound coming from Boop.</p>
+<p>The volume can be controlled by the volume keys at the side of the phone .  You can make the overall volume higher or lower.  Additionally, the mute switch will shut off any sound coming from Boop.  This can be used with the vibration on to sense light levels in quiet areas such as a library or near a sleeping partner.</p>
 
 <h3>
-<a id="hearing-the-luminescent-reading" class="anchor" href="#hearing-the-luminescent-reading" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>hearing the luminescent reading</h3>
+<a id="hearing-the-light-level-reading" class="anchor" href="#hearing-the-light-level-reading" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Hearing the Light Level Reading</h3>
 
 <p>Voice over users can simply tap the center of the screen where the luminescent reading is labeled.  Then, voice over will read to you the value of the light reading, which ranges from 0 - 100. </p>
 
@@ -94,8 +94,8 @@
 <a id="news" class="anchor" href="#news" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>News</h2>
 
 <ul>
-<li><p>The MIT assistive technology hackathon was in the news: <a href="http://www.ll.mit.edu/news/students-build-assistive-technologies-for-Boston-residents-in-need.html">http://www.ll.mit.edu/news/students-build-assistive-technologies-for-Boston-residents-in-need.html</a></p></li>
-<li><p>We received honorable mention at athack: <a href="http://assistivetech.mit.edu/athack/2016.html">http://assistivetech.mit.edu/athack/2016.html</a></p></li>
+<li><p>The MIT Assistive Technology Hackathon (ATHack) was in the news: <a href="http://www.ll.mit.edu/news/students-build-assistive-technologies-for-Boston-residents-in-need.html">http://www.ll.mit.edu/news/students-build-assistive-technologies-for-Boston-residents-in-need.html</a></p></li>
+<li><p>We received honorable mention at ATHack: <a href="http://assistivetech.mit.edu/athack/2016.html">http://assistivetech.mit.edu/athack/2016.html</a></p></li>
 </ul>
 
 <h2>
@@ -103,7 +103,7 @@
 
 <p>Boop is developed by Ariel Anders and Daniel Preston. The first version of our app was created while participating in the MIT Assistive Technology Hackathon 2016 with teammate Areej Al-Wabil.</p>
 
-<p>The idea for our app was presented by Jonathan Gale, a blind avid iPhone user.  Jonathan wanted to use his phone to determine if lights were on in his home to save energy.  Jonathan helped with all aspects of our development including rigorous testing during and after Athack.  </p>
+<p>The idea for our app was presented by Jonathan Gale, a blind avid iPhone user.  Jonathan wanted to use his phone to determine if lights were on in his home to save energy.  Jonathan helped with all aspects of our development including rigorous testing during and after ATHack.  </p>
 
 <h2>
 <a id="support-or-contact" class="anchor" href="#support-or-contact" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Support or Contact</h2>
