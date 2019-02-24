@@ -88,9 +88,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		02074DA21C814BEE007A5B7E /* boop */ = {
+		02074DA21C814BEE007A5B7E /* Boop */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 02074DB51C814BEE007A5B7E /* Build configuration list for PBXNativeTarget "boop" */;
+			buildConfigurationList = 02074DB51C814BEE007A5B7E /* Build configuration list for PBXNativeTarget "Boop" */;
 			buildPhases = (
 				02074D9F1C814BEE007A5B7E /* Sources */,
 				02074DA01C814BEE007A5B7E /* Frameworks */,
@@ -100,7 +100,7 @@
 			);
 			dependencies = (
 			);
-			name = boop;
+			name = Boop;
 			productName = boop;
 			productReference = 02074DA31C814BEE007A5B7E /* boop.app */;
 			productType = "com.apple.product-type.application";
@@ -121,7 +121,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 02074D9E1C814BEE007A5B7E /* Build configuration list for PBXProject "boop" */;
+			buildConfigurationList = 02074D9E1C814BEE007A5B7E /* Build configuration list for PBXProject "Boop" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -134,7 +134,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				02074DA21C814BEE007A5B7E /* boop */,
+				02074DA21C814BEE007A5B7E /* Boop */,
 			);
 		};
 /* End PBXProject section */
@@ -221,7 +221,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -259,7 +259,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
@@ -274,10 +274,10 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = boop/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = athack.boop;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = boop;
 				SWIFT_OBJC_BRIDGING_HEADER = "boop/boop-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -292,10 +292,10 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = boop/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = athack.boop;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = boop;
 				SWIFT_OBJC_BRIDGING_HEADER = "boop/boop-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -304,7 +304,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		02074D9E1C814BEE007A5B7E /* Build configuration list for PBXProject "boop" */ = {
+		02074D9E1C814BEE007A5B7E /* Build configuration list for PBXProject "Boop" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				02074DB31C814BEE007A5B7E /* Debug */,
@@ -313,7 +313,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		02074DB51C814BEE007A5B7E /* Build configuration list for PBXNativeTarget "boop" */ = {
+		02074DB51C814BEE007A5B7E /* Build configuration list for PBXNativeTarget "Boop" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				02074DB61C814BEE007A5B7E /* Debug */,

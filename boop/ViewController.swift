@@ -22,6 +22,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
    // @IBOutlet weak var capturedImage: UIImageView!
     @IBOutlet weak var previewView: UIView!
    // @IBOutlet weak var capturePhoto: UIButton!
+    
     var captureSession: AVCaptureSession?
     var stillImageOutput: AVCaptureStillImageOutput?
     var previewLayer: AVCaptureVideoPreviewLayer?
@@ -172,6 +173,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     }
     
   override func viewWillAppear(animated: Bool) {
+    
         NSLog("i am here")
         super.viewWillAppear(animated)
         setup = false
@@ -331,7 +333,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         self.mute_mode = !(self.mute_mode!)
     }*/
     
-   
+ 
     
     func getPixels(){
         if (!processImgLock! && !lock!){
