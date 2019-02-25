@@ -47,10 +47,10 @@
                                     </mask>
                                 </variation>
                             </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="center" semanticContentAttribute="spatial" verticalHuggingPriority="252" text="0" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fL5-jv-s3F">
+                            <label opaque="NO" contentMode="center" semanticContentAttribute="spatial" verticalHuggingPriority="252" text="0" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fL5-jv-s3F">
                                 <rect key="frame" x="149" y="363.5" width="302" height="73"/>
                                 <accessibility key="accessibilityConfiguration">
-                                    <accessibilityTraits key="traits" staticText="YES" notEnabled="YES" updatesFrequently="YES"/>
+                                    <accessibilityTraits key="traits" staticText="YES" summaryElement="YES" notEnabled="YES" updatesFrequently="YES"/>
                                     <bool key="isElement" value="YES"/>
                                 </accessibility>
                                 <constraints>
@@ -99,9 +99,10 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <switch opaque="NO" multipleTouchEnabled="YES" contentMode="scaleToFill" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="250" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dO0-2w-9Zc">
-                                <rect key="frame" x="275.5" y="732" width="51" height="31"/>
-                                <accessibility key="accessibilityConfiguration">
-                                    <accessibilityTraits key="traits" button="YES" notEnabled="YES"/>
+                                <rect key="frame" x="276" y="732" width="51" height="31"/>
+                                <accessibility key="accessibilityConfiguration" hint="toggle volume switch" label="vibrate toggle">
+                                    <accessibilityTraits key="traits" button="YES" notEnabled="YES" adjustable="YES" allowsDirectInteraction="YES"/>
+                                    <bool key="isElement" value="YES"/>
                                 </accessibility>
                                 <rect key="contentStretch" x="1" y="1" width="1" height="1"/>
                                 <connections>
