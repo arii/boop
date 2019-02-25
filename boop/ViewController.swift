@@ -200,6 +200,10 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
 
         //backCamera = AVCaptureDevice.default(for: AVMediaType.video)
         backCamera = getDevice(position: .back)
+        if backCamera == nil {
+            self.loaded=false
+            return
+        }
     
         var input: AVCaptureDeviceInput!
         do {
