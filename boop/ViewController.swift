@@ -53,7 +53,6 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     
     var lock : Bool?
     var processImgLock : Bool?
-    
     var loaded:Bool?
     
     
@@ -61,6 +60,9 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         super.viewWillAppear(animated)
         
         NSLog("View will appear")
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        NSLog(appDelegate.special_test)
+        
         startLightDetection()
     }
     override func viewDidAppear(_ animated: Bool) {
@@ -71,7 +73,8 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         }
         NSLog("View did appear")
     }
-    
+
+        
     func startLightDetection(){
         setupServices()
         
@@ -85,8 +88,6 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         }
         
     }
-    
-    
     
     
     /* Start Up Services Camera and Audo*/
@@ -319,6 +320,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             let lum =  (0.21 * avg_red + 0.72*avg_green + 0.07*avg_blue ) / 255.0
             self.prev_lum = self.prev_lum1
             self.prev_lum1 = lum
+
             processImgLock = false
             
         }
