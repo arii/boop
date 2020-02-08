@@ -57,16 +57,12 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     var loaded:Bool?
     
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    override func viewWillAppear(_ animated: Bool) {
+        
         NSLog("View did load")
         self.prev_lum1 = 0.0
         self.prev_lum = 0.0
         self.lastBuzz =   NSDate().timeIntervalSince1970
-        
-        
-    }
-    override func viewWillAppear(_ animated: Bool) {
         
         NSLog("view will appear")
         super.viewWillAppear(animated)
@@ -145,6 +141,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             self.vibrate_label.text="camera & sound error"
         }
     }
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         if (setup!){
