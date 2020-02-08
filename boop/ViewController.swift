@@ -60,44 +60,38 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        NSLog("View did load")
+        NSLog("View will appear")
+        startLightDetection()
+    }
+    
+    func startLightDetection(){
+        setupServices()
+        
         self.prev_lum1 = 0.0
         self.prev_lum = 0.0
         self.lastBuzz =   NSDate().timeIntervalSince1970
-        
-        setup = false
-        self.loaded = true
-        setup = setupCamera()
-        
-        var error: NSError?
-        self.audioEngine = AVAudioEngine()
-        AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
-        AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
-        AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
-        
-        
-        self.lastBuzz =   NSDate().timeIntervalSince1970
         self.lock = false
         self.processImgLock = false
-        
-        mixer = self.audioEngine?.mainMixerNode
-        sampler = AVAudioUnitSampler()
-        self.audioEngine?.attach(sampler!)
-        self.audioEngine?.connect(sampler!, to: mixer!, format: sampler!.outputFormat(forBus: 0))
-        do{
-            try   self.audioEngine?.start()
-        }catch let error2 as NSError{
-            error = error2
-            self.loaded = false
-            NSLog(error!.description)
-        }
         if (self.loaded!){
             self.updater = Timer.scheduledTimer( timeInterval: 0.07, target: self, selector: #selector(UIMenuController.update), userInfo: nil, repeats: true)
-        }else {
-            self.vibrate_label.text="camera & sound error"
         }
+        
     }
     
+    func setupServices(){
+        let setup_camera = setupCamera()
+        let setup_audio = setupAudio()
+        self.loaded = setup_camera && setup_audio
+        if (!self.loaded!){
+            var vib_text : String?
+            if (setup_camera){
+                 vib_text = "sound error"
+            }else{
+                 vib_text = "camera error"
+            }
+            self.vibrate_label.text=vib_text
+        }
+    }
     func setupCamera() -> Bool {
         
         self.captureSession = AVCaptureSession()
@@ -109,7 +103,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         
         self.backCamera = getDevice(position: .back)
         if self.backCamera == nil {
-            self.loaded=false
+            NSLog("Cant even discover a camera!")
             return setup!
         }
         
@@ -120,7 +114,6 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             input = nil
             NSLog("Camera error -- permissions")
             NSLog(error.description)
-            self.loaded = false
             return setup!
         }
         
@@ -152,12 +145,33 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         
     }
     
+    func setupAudio() -> Bool {
+        var setup : Bool?
+        setup = true
+        self.audioEngine = AVAudioEngine()
+        AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
+        AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
+        AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
+        
+        self.mixer = self.audioEngine?.mainMixerNode
+        self.sampler = AVAudioUnitSampler()
+        self.audioEngine?.attach(self.sampler!)
+        self.audioEngine?.connect(self.sampler!, to: self.mixer!, format: self.sampler!.outputFormat(forBus: 0))
+        do{
+            try   self.audioEngine?.start()
+        }catch let error as NSError{
+            setup = false
+            NSLog(error.description)
+        }
+        
+        return setup!
+    }
     
     
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        if (setup!){
+        if (self.loaded!){
             previewLayer!.frame = previewView.bounds
         }
         NSLog("View did appear")
