@@ -25,7 +25,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     var stillImageOutput: AVCaptureStillImageOutput?
     var previewLayer: AVCaptureVideoPreviewLayer?
     var SwiftTimer : Timer?
-
+    
     var audioEngine : AVAudioEngine?
     var updater: Timer?
     var setup: Bool?
@@ -40,7 +40,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     
     
     var backCamera: AVCaptureDevice?
-
+    
     var lastBuzz: Double?
     
     var prev_lum: Double?
@@ -59,9 +59,17 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
+        
         NSLog("View will appear")
         startLightDetection()
+    }
+    override func viewDidAppear(_ animated: Bool) {
+        // make it so we can see the camera stream
+        super.viewDidAppear(animated)
+        if (self.loaded!){
+            previewLayer!.frame = previewView.bounds
+        }
+        NSLog("View did appear")
     }
     
     func startLightDetection(){
@@ -78,6 +86,10 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         
     }
     
+    
+    
+    
+    /* Start Up Services Camera and Audo*/
     func setupServices(){
         let setup_camera = setupCamera()
         let setup_audio = setupAudio()
@@ -85,9 +97,9 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         if (!self.loaded!){
             var vib_text : String?
             if (setup_camera){
-                 vib_text = "sound error"
+                vib_text = "sound error"
             }else{
-                 vib_text = "camera error"
+                vib_text = "camera error"
             }
             self.vibrate_label.text=vib_text
         }
@@ -99,8 +111,6 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         var input: AVCaptureDeviceInput!
         
         setup = false
-        
-        
         self.backCamera = getDevice(position: .back)
         if self.backCamera == nil {
             NSLog("Cant even discover a camera!")
@@ -167,18 +177,6 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         return setup!
     }
     
-    
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        if (self.loaded!){
-            previewLayer!.frame = previewView.bounds
-        }
-        NSLog("View did appear")
-    }
-    
-    
-
     //Get the device (Front or Back)
     func getDevice(position: AVCaptureDevice.Position) -> AVCaptureDevice? {
         // as default back device is first option
@@ -194,9 +192,10 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     }
     
     
-    
+    // camera image callback and pixel computation
     func captureOutput(_ captureOutput: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection)
     {
+        // not sure how this attaches tbh
         pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
         context = CIContext(options:nil)
         cameraImage = CIImage(cvPixelBuffer: pixelBuffer!)
@@ -206,10 +205,16 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         }
     }
     
-
+    
+    /* Light detection secret sauce */
+    
     @objc func update() {
+        if (!self.loaded!){
+            NSLog("Light detection services not enabled") //XXX should comment
+            return
+        }
         
-        if (self.lock! && setup!){
+        if (self.lock!){
             NSLog("locked")
         } else{
             
@@ -263,11 +268,15 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         }
     }
     
-    func play(note:UInt8, velocity:UInt8){
-        sampler!.startNote(note, withVelocity: velocity, onChannel: 1)
-    }
-    
     func getPixels(){
+        
+        if (!self.loaded!){
+            // ideally we would not get here, since the camera calls it
+            // but in case there's a race condition
+            NSLog("GetPixels: Light detection services not enabled") //XXX should comment
+            return
+        }
+        
         if (!processImgLock! && !lock!){
             processImgLock = true
             
@@ -315,6 +324,9 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         }
     }
     
+    func play(note:UInt8, velocity:UInt8){
+        sampler!.startNote(note, withVelocity: velocity, onChannel: 1)
+    }
     
     
     
