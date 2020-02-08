@@ -24,6 +24,8 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     var captureSession: AVCaptureSession?
     var stillImageOutput: AVCaptureStillImageOutput?
     var previewLayer: AVCaptureVideoPreviewLayer?
+    var input_av_capture: AVCaptureDeviceInput?
+    
     var SwiftTimer : Timer?
     
     //var audioEngine : AVAudioEngine?
@@ -109,9 +111,9 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     }
     func setupCamera() -> Bool {
         
-        self.captureSession = AVCaptureSession()
         var setup : Bool?
-        var input: AVCaptureDeviceInput!
+        
+        self.captureSession = AVCaptureSession()
         
         setup = false
         self.backCamera = getDevice(position: .back)
@@ -122,9 +124,9 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         
         // set up back camera as input device
         do {
-            input = try AVCaptureDeviceInput(device: self.backCamera!)
+            self.input_av_capture = try AVCaptureDeviceInput(device: self.backCamera!)
         } catch let error as NSError {
-            input = nil
+            self.input_av_capture = nil
             NSLog("Camera error -- permissions")
             NSLog(error.description)
             return setup!
@@ -134,8 +136,8 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         let videoOutput = AVCaptureVideoDataOutput()
         videoOutput.setSampleBufferDelegate(self, queue: DispatchQueue(label: "sample buffer delegate"))
         
-        if captureSession!.canAddInput(input) {
-            captureSession!.addInput(input)
+        if captureSession!.canAddInput(self.input_av_capture!) {
+            captureSession!.addInput(self.input_av_capture!)
             
             stillImageOutput = AVCaptureStillImageOutput()
             stillImageOutput!.outputSettings = [AVVideoCodecKey: AVVideoCodecJPEG]
@@ -157,6 +159,34 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         return setup!
         
     }
+   /*
+    func setupCameraPassthrough() -> Bool{
+        var setup : Bool?
+        
+        self.captureSession = AVCaptureSession()
+        // show what the camera sees in previewLayer
+        if captureSession!.canAddInput(input_av_capture) {
+            captureSession!.addInput(input_av_capture)
+            
+            stillImageOutput = AVCaptureStillImageOutput()
+            stillImageOutput!.outputSettings = [AVVideoCodecKey: AVVideoCodecJPEG]
+            if captureSession!.canAddOutput(stillImageOutput!) {
+                
+                captureSession!.addOutput(stillImageOutput!)
+                previewLayer = AVCaptureVideoPreviewLayer(session: captureSession!)
+                previewLayer!.connection?.videoOrientation = AVCaptureVideoOrientation.portrait
+                previewView.layer.addSublayer(previewLayer!)
+                
+                captureSession!.addOutput(videoOutput)
+                captureSession!.startRunning()
+                setup = true
+            }
+        }else {
+            NSLog("cannot get camera input")
+            setup = false
+        }
+        return setup!
+    }*/
     
     /*func setupAudio() -> Bool {
         var setup : Bool?
