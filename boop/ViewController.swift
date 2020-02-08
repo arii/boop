@@ -127,7 +127,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         
 
         var amount = (self.prev_lum! + self.prev_lum1!)/2
-            let iso = Double((self.backCamera?.iso)!)
+        let iso = Double((self.backCamera?.iso)!)
         let exp = Double((self.backCamera?.exposureDuration.seconds)!)
         
         var scalelum =  (log10( amount / (iso*exp)) + 2.4)/2.8
@@ -281,10 +281,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         DispatchQueue.main.async {
             self.getPixels()
         }
-        //dispatch_async(dispatch_get_main_queue())
-        //    {
-        //        self.getPixels()
-        //}
+        
         
     }
     
@@ -300,11 +297,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         // Dispose of any resources that can be recreated.
     }
 
-    /*
-    func GotoProfile(){
-       // self.performSegueWithIdentifier("Profilesegue", sender: nil)
-        self.toggle()
-    }*/
+    
 
     override func accessibilityPerformMagicTap() -> Bool {
 
@@ -341,25 +334,6 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         }
         }
     }
-
-    /*
-    @IBAction func toggle_mute(sender: AnyObject) {
-        if (self.mute_mode!){
-            self.vibrate_enable.setTitle("Vibrate On",forState: UIControlState.Normal)
-        }else{
-            self.vibrate_enable.setTitle("Vibrate Off", forState:UIControlState.Normal)
-        }
-        self.mute_mode = !(self.mute_mode!)
-    }
-
-    func toggle(){
-        if (self.mute_mode!){
-            self.vibrate_enable.setTitle("Enable Vibrate",forState: UIControlState.Normal)
-        }else{
-            self.vibrate_enable.setTitle("Disable Vibrate", forState:UIControlState.Normal)
-        }
-        self.mute_mode = !(self.mute_mode!)
-    }*/
     
  
     
@@ -370,8 +344,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         let width = self.cgImg!.width
         let height = self.cgImg!.height
     
-            pixelData = self.cgImg!.dataProvider?.data
-            //CGDataProviderCopyData(CGImageGetDataProvider(self.cgImg!) ?? <#default value#>)
+        pixelData = self.cgImg!.dataProvider?.data
         pixels = CFDataGetBytePtr(pixelData)
         var sum_red = 0
         var sum_green = 0
