@@ -7,20 +7,33 @@
 //
 
 import UIKit
+import AudioToolbox
+import AVFoundation
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     let special_test = "Hello World!"
-
+    
+    var audioEngine : AVAudioEngine?
+    var sampler:AVAudioUnitSampler?
+    var mixer:AVAudioMixerNode?
+    
+    var setup_audio:Bool?
+    
+    
 
     private func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
         NSLog("launched")
+        
         return true
     }
-
+    
+    
+    
+    
     func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
         // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
@@ -36,6 +49,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
+        
         // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
         NSLog("will enter forground")
     }
@@ -49,6 +63,33 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
         NSLog("wil terminate")
     }
+    
+    
+
+    
+    func setupAudio() -> Bool {
+        var setup : Bool?
+        setup = true
+        self.audioEngine = AVAudioEngine()
+        AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
+        AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
+        AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
+        
+        self.mixer = self.audioEngine?.mainMixerNode
+        self.sampler = AVAudioUnitSampler()
+        self.audioEngine?.attach(self.sampler!)
+        self.audioEngine?.connect(self.sampler!, to: self.mixer!, format: self.sampler!.outputFormat(forBus: 0))
+        do{
+            try   self.audioEngine?.start()
+        }catch let error as NSError{
+            setup = false
+            NSLog(error.description)
+        }
+        self.setup_audio = setup
+        return setup!
+    }
+    
+    
 
 
 }

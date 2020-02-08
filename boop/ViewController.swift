@@ -26,7 +26,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     var previewLayer: AVCaptureVideoPreviewLayer?
     var SwiftTimer : Timer?
     
-    var audioEngine : AVAudioEngine?
+    //var audioEngine : AVAudioEngine?
     var updater: Timer?
     var setup: Bool?
     
@@ -46,8 +46,8 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     var prev_lum: Double?
     var prev_lum1: Double?
     
-    var sampler:AVAudioUnitSampler?
-    var mixer:AVAudioMixerNode?
+    //var sampler:AVAudioUnitSampler?
+    //var mixer:AVAudioMixerNode?
     
     let tap = UITapGestureRecognizer()
     
@@ -55,13 +55,13 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     var processImgLock : Bool?
     var loaded:Bool?
     
+    let AD = UIApplication.shared.delegate as! AppDelegate
+
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         NSLog("View will appear")
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        NSLog(appDelegate.special_test)
         
         startLightDetection()
     }
@@ -93,7 +93,9 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     /* Start Up Services Camera and Audo*/
     func setupServices(){
         let setup_camera = setupCamera()
-        let setup_audio = setupAudio()
+        let setup_audio = AD.setupAudio()
+
+        //let setup_audio = setupAudio()
         self.loaded = setup_camera && setup_audio
         if (!self.loaded!){
             var vib_text : String?
@@ -156,7 +158,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         
     }
     
-    func setupAudio() -> Bool {
+    /*func setupAudio() -> Bool {
         var setup : Bool?
         setup = true
         self.audioEngine = AVAudioEngine()
@@ -176,7 +178,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         }
         
         return setup!
-    }
+    }*/
     
     //Get the device (Front or Back)
     func getDevice(position: AVCaptureDevice.Position) -> AVCaptureDevice? {
@@ -221,8 +223,6 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             
             self.lock = true
             
-            
-            
             var amount = (self.prev_lum! + self.prev_lum1!)/2
             let iso = Double((self.backCamera?.iso)!)
             let exp = Double((self.backCamera?.exposureDuration.seconds)!)
@@ -263,7 +263,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             
             usleep (UInt32(sleep_time))
             if (amount > 0.01){
-                sampler!.stopNote(note, onChannel: 1)
+                AD.sampler!.stopNote(note, onChannel: 1)
             }
             self.lock = false
         }
@@ -327,7 +327,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     }
     
     func play(note:UInt8, velocity:UInt8){
-        sampler!.startNote(note, withVelocity: velocity, onChannel: 1)
+        AD.sampler!.startNote(note, withVelocity: velocity, onChannel: 1)
     }
     
     
