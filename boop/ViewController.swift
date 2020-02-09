@@ -22,9 +22,9 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     
     var mySound: AVAudioPlayer?
     
-    var captureSession: AVCaptureSession?
-    var input_av_capture: AVCaptureDeviceInput?
-    var videoOutput : AVCaptureVideoDataOutput?
+    //var captureSession: AVCaptureSession?
+    //var input_av_capture: AVCaptureDeviceInput?
+    //var videoOutput : AVCaptureVideoDataOutput?
     
     var previewLayer: AVCaptureVideoPreviewLayer?
     var SwiftTimer : Timer?
@@ -33,21 +33,21 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     var updater: Timer?
     var setup: Bool?
     
-    //pixel callbacks
+    /*//pixel callbacks
     var pixelBuffer: CVPixelBuffer?
     var context: CIContext?
     var cameraImage: CIImage?
     var cgImg: CGImage?
     var pixelData:CFData?
-    var pixels: UnsafePointer<UInt8>?
+    var pixels: UnsafePointer<UInt8>?*/
     
     
-    var backCamera: AVCaptureDevice?
+    //var backCamera: AVCaptureDevice?
     
     var lastBuzz: Double?
     
-    var prev_lum: Double?
-    var prev_lum1: Double?
+    //var prev_lum: Double?
+    //var prev_lum1: Double?
     
     //var sampler:AVAudioUnitSampler?
     //var mixer:AVAudioMixerNode?
@@ -55,8 +55,8 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     let tap = UITapGestureRecognizer()
     
     var lock : Bool?
-    var processImgLock : Bool?
-    var loaded:Bool?
+    //var processImgLock : Bool?
+    // var loaded:Bool?
     
     let AD = UIApplication.shared.delegate as! AppDelegate
 
@@ -71,7 +71,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     override func viewDidAppear(_ animated: Bool) {
         // make it so we can see the camera stream
         super.viewDidAppear(animated)
-        if (self.loaded! && previewLayer != nil){
+        if (AD.loaded! && previewLayer != nil){
             previewLayer!.frame = previewView.bounds
         }
         NSLog("View did appear")
@@ -82,12 +82,12 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         setupServices()
         setupCameraPreviewLayer()
         
-        self.prev_lum1 = 0.0
-        self.prev_lum = 0.0
+        AD.prev_lum1 = 0.0
+        AD.prev_lum = 0.0
         self.lastBuzz =   NSDate().timeIntervalSince1970
         self.lock = false
-        self.processImgLock = false
-        if (self.loaded!){
+        AD.processImgLock = false
+        if (AD.loaded!){
             self.updater = Timer.scheduledTimer( timeInterval: 0.07, target: self, selector: #selector(UIMenuController.update), userInfo: nil, repeats: true)
         }
         
@@ -96,12 +96,12 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     
     /* Start Up Services Camera and Audo*/
     func setupServices(){
-        let setup_camera = setupCamera()
+        let setup_camera = AD.setupCamera()
         let setup_audio = AD.setupAudio()
 
         //let setup_audio = setupAudio()
-        self.loaded = setup_camera && setup_audio
-        if (!self.loaded!){
+        AD.loaded = setup_camera && setup_audio
+        if (!AD.loaded!){
             var vib_text : String?
             if (setup_camera){
                 vib_text = "sound error"
@@ -111,7 +111,8 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             self.vibrate_label.text=vib_text
         }
     }
-    func setupCamera() -> Bool {
+    
+   /* func setupCamera() -> Bool {
         
         var setup : Bool?
         setup = false
@@ -150,33 +151,12 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         }else{
             NSLog("cannot capture video input")
             }
-            /*
-            
-            stillImageOutput = AVCaptureStillImageOutput()
-            stillImageOutput!.outputSettings = [AVVideoCodecKey: AVVideoCodecJPEG]
-            if captureSession!.canAddOutput(stillImageOutput!) {
-                
-                captureSession!.addOutput(stillImageOutput!)
-                
-                /*previewLayer = AVCaptureVideoPreviewLayer(session: captureSession!)
-                previewLayer!.connection?.videoOrientation = AVCaptureVideoOrientation.portrait
-                previewView.layer.addSublayer(previewLayer!)*/
-                
-                captureSession!.addOutput(videoOutput)
-                captureSession!.startRunning()
-                setup = true
-            }
-        }else {
-            NSLog("cannot get camera input")
-            setup = false
-        }*/
         return setup!
-        
-    }
+    }*/
    
     func setupCameraPreviewLayer(){
-        if (self.loaded!){
-        previewLayer = AVCaptureVideoPreviewLayer(session: self.captureSession!)
+        if (AD.loaded!){
+        previewLayer = AVCaptureVideoPreviewLayer(session: AD.captureSession!)
         previewLayer!.connection?.videoOrientation = AVCaptureVideoOrientation.portrait
         previewView.layer.addSublayer(previewLayer!)
         }else{
@@ -206,7 +186,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         return setup!
     }*/
     
-    //Get the device (Front or Back)
+  /*  //Get the device (Front or Back)
     func getDevice(position: AVCaptureDevice.Position) -> AVCaptureDevice? {
         // as default back device is first option
         // possibly want to be more specific here
@@ -218,10 +198,10 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             }
         }
         return nil
-    }
+    }*/
     
     
-    // camera image callback and pixel computation
+    /*// camera image callback and pixel computation
     func captureOutput(_ captureOutput: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection)
     {
         // not sure how this attaches tbh
@@ -232,13 +212,13 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         DispatchQueue.main.async {
             self.getPixels()
         }
-    }
+    }*/
     
     
     /* Light detection secret sauce */
     
     @objc func update() {
-        if (!self.loaded!){
+        if (!AD.loaded!){
             NSLog("Light detection services not enabled") //XXX should comment
             return
         }
@@ -249,9 +229,9 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             
             self.lock = true
             
-            var amount = (self.prev_lum! + self.prev_lum1!)/2
-            let iso = Double((self.backCamera?.iso)!)
-            let exp = Double((self.backCamera?.exposureDuration.seconds)!)
+            var amount = (AD.prev_lum! + AD.prev_lum1!)/2
+            let iso = Double((AD.backCamera?.iso)!)
+            let exp = Double((AD.backCamera?.exposureDuration.seconds)!)
             
             var scalelum =  (log10( amount / (iso*exp)) + 2.4)/2.8
             if (scalelum <= 0.0){
@@ -295,7 +275,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         }
     }
     
-    func getPixels(){
+    /*func getPixels(){
         
         if (!self.loaded!){
             // ideally we would not get here, since the camera calls it
@@ -350,7 +330,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             processImgLock = false
             
         }
-    }
+    }*/
     
     func play(note:UInt8, velocity:UInt8){
         AD.sampler!.startNote(note, withVelocity: velocity, onChannel: 1)
@@ -367,7 +347,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         
     }
     override func accessibilityPerformEscape() -> Bool {
-        if (self.loaded!){
+        if (AD.loaded!){
             
             if (self.do_vibrate.isOn){
                 self.vibrate_label.text = "Vibrate mode is off"
@@ -382,7 +362,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         return true
     }
     @IBAction func vibrate_toggle(_ sender: Any) {
-        if (self.loaded!){
+        if (AD.loaded!){
             if (self.do_vibrate.isOn){
                 self.vibrate_label.text = "Vibrate mode is on"
                 // self.vibrate_enable.setTitle("Vibrate On",forState: UIControlState.Normal)
