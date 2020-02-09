@@ -21,42 +21,13 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     @IBOutlet weak var luminance: UILabel!
     
     var mySound: AVAudioPlayer?
-    
-    //var captureSession: AVCaptureSession?
-    //var input_av_capture: AVCaptureDeviceInput?
-    //var videoOutput : AVCaptureVideoDataOutput?
-    
     var previewLayer: AVCaptureVideoPreviewLayer?
-    var SwiftTimer : Timer?
-    
-    //var audioEngine : AVAudioEngine?
     var updater: Timer?
-    var setup: Bool?
-    
-    /*//pixel callbacks
-    var pixelBuffer: CVPixelBuffer?
-    var context: CIContext?
-    var cameraImage: CIImage?
-    var cgImg: CGImage?
-    var pixelData:CFData?
-    var pixels: UnsafePointer<UInt8>?*/
-    
-    
-    //var backCamera: AVCaptureDevice?
     
     var lastBuzz: Double?
-    
-    //var prev_lum: Double?
-    //var prev_lum1: Double?
-    
-    //var sampler:AVAudioUnitSampler?
-    //var mixer:AVAudioMixerNode?
-    
+
     let tap = UITapGestureRecognizer()
-    
     var lock : Bool?
-    //var processImgLock : Bool?
-    // var loaded:Bool?
     
     let AD = UIApplication.shared.delegate as! AppDelegate
 
@@ -68,15 +39,6 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         
         startLightDetection()
     }
-    override func viewDidAppear(_ animated: Bool) {
-        // make it so we can see the camera stream
-        super.viewDidAppear(animated)
-        if (AD.loaded! && previewLayer != nil){
-            previewLayer!.frame = previewView.bounds
-        }
-        NSLog("View did appear")
-    }
-
         
     func startLightDetection(){
         setupServices()
@@ -111,48 +73,6 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             self.vibrate_label.text=vib_text
         }
     }
-    
-   /* func setupCamera() -> Bool {
-        
-        var setup : Bool?
-        setup = false
-        
-        self.captureSession = AVCaptureSession()
-        self.backCamera = getDevice(position: .back)
-        
-        if self.backCamera == nil {
-            NSLog("Cant even discover a camera!")
-            return setup!
-        }
-        
-        // set up back camera as input device
-        do {
-            self.input_av_capture = try AVCaptureDeviceInput(device: self.backCamera!)
-        } catch let error as NSError {
-            self.input_av_capture = nil
-            NSLog("Camera error -- permissions")
-            NSLog(error.description)
-            return setup!
-        }
-        
-        self.videoOutput = AVCaptureVideoDataOutput()
-        self.videoOutput!.setSampleBufferDelegate(self, queue: DispatchQueue(label: "sample buffer delegate"))
-        
-        if self.captureSession!.canAddInput(self.input_av_capture!) {
-            self.captureSession!.addInput(self.input_av_capture!)
-        
-            if self.captureSession!.canAddOutput(self.videoOutput!) {
-                self.captureSession!.addOutput(self.videoOutput!)
-                self.captureSession!.startRunning()
-                setup = true
-            }else{
-                NSLog("cannot capture video output")
-            }
-        }else{
-            NSLog("cannot capture video input")
-            }
-        return setup!
-    }*/
    
     func setupCameraPreviewLayer(){
         if (AD.loaded!){
@@ -162,57 +82,11 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         }else{
             NSLog("did not load preview layer due to loading error")
         }
+        if (AD.loaded! && previewLayer != nil){
+            previewLayer!.frame = previewView.bounds
+        }
+        NSLog("View did appear")
     }
-    
-    /*func setupAudio() -> Bool {
-        var setup : Bool?
-        setup = true
-        self.audioEngine = AVAudioEngine()
-        AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
-        AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
-        AudioServicesPlayAlertSound(SystemSoundID(kSystemSoundID_Vibrate))
-        
-        self.mixer = self.audioEngine?.mainMixerNode
-        self.sampler = AVAudioUnitSampler()
-        self.audioEngine?.attach(self.sampler!)
-        self.audioEngine?.connect(self.sampler!, to: self.mixer!, format: self.sampler!.outputFormat(forBus: 0))
-        do{
-            try   self.audioEngine?.start()
-        }catch let error as NSError{
-            setup = false
-            NSLog(error.description)
-        }
-        
-        return setup!
-    }*/
-    
-  /*  //Get the device (Front or Back)
-    func getDevice(position: AVCaptureDevice.Position) -> AVCaptureDevice? {
-        // as default back device is first option
-        // possibly want to be more specific here
-        let devices: NSArray = AVCaptureDevice.devices() as NSArray;
-        for de in devices {
-            let deviceConverted = de as! AVCaptureDevice
-            if(deviceConverted.position == position){
-                return deviceConverted
-            }
-        }
-        return nil
-    }*/
-    
-    
-    /*// camera image callback and pixel computation
-    func captureOutput(_ captureOutput: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection)
-    {
-        // not sure how this attaches tbh
-        pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer)
-        context = CIContext(options:nil)
-        cameraImage = CIImage(cvPixelBuffer: pixelBuffer!)
-        cgImg = context!.createCGImage(cameraImage!, from: cameraImage!.extent)
-        DispatchQueue.main.async {
-            self.getPixels()
-        }
-    }*/
     
     
     /* Light detection secret sauce */
@@ -275,62 +149,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         }
     }
     
-    /*func getPixels(){
-        
-        if (!self.loaded!){
-            // ideally we would not get here, since the camera calls it
-            // but in case there's a race condition
-            NSLog("GetPixels: Light detection services not enabled") //XXX should comment
-            return
-        }
-        
-        if (!processImgLock! && !lock!){
-            processImgLock = true
-            
-            let width = self.cgImg!.width
-            let height = self.cgImg!.height
-            
-            pixelData = self.cgImg!.dataProvider?.data
-            pixels = CFDataGetBytePtr(pixelData)
-            var sum_red = 0
-            var sum_green = 0
-            var sum_blue = 0
-            
-            let mid_size = 20
-            let mid_sqr = (mid_size + 1 ) * (mid_size + 1)
-            
-            let x_min = width/2 - mid_size / 2
-            let x_max = width/2 + mid_size / 2
-            
-            let y_min = height/2 - mid_size / 2
-            let y_max = height/2 + mid_size / 2
-            
-            for x in x_min ... x_max  {
-                for y in y_min ... y_max {
-                    //Here is your raw pixels
-                    let offset = 4*((Int(width) * Int(y)) + Int(x))
-                    let red = pixels![offset]
-                    let green = pixels![offset+1]
-                    let blue = pixels![offset+2]
-                    sum_red = sum_red + Int(red)
-                    sum_green = sum_green + Int(green)
-                    sum_blue = sum_blue + Int(blue)
-                }
-            }
-            
-            
-            let avg_red = Double( sum_red/mid_sqr)
-            let avg_green = Double( sum_green/mid_sqr)
-            let avg_blue = Double(sum_blue/mid_sqr)
-            
-            let lum =  (0.21 * avg_red + 0.72*avg_green + 0.07*avg_blue ) / 255.0
-            self.prev_lum = self.prev_lum1
-            self.prev_lum1 = lum
-
-            processImgLock = false
-            
-        }
-    }*/
+    
     
     func play(note:UInt8, velocity:UInt8){
         AD.sampler!.startNote(note, withVelocity: velocity, onChannel: 1)

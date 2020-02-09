@@ -79,6 +79,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate,AVCaptureVideoDataOutputSa
         NSLog("will enter forground")
     }
 
+    func application(_ application: UIApplication, handleOpen url: URL) -> Bool {
+        NSLog("opening")
+        return true
+    }
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
         NSLog("did become active")
