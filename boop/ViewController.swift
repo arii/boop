@@ -15,6 +15,14 @@ import Darwin
 
 class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate{
     
+    let debug = false
+    
+    func NSLogDebug(_ str: String){
+        if(debug){
+            NSLog(str)
+        }
+    }
+    
     @IBOutlet weak var vibrate_label: UILabel!
     @IBOutlet weak var previewView: UIView!
     @IBOutlet weak var do_vibrate: UISwitch!
@@ -28,8 +36,10 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
 
     let tap = UITapGestureRecognizer()
     var lock : Bool?
+    var app_running : Bool?
     
     let AD = UIApplication.shared.delegate as! AppDelegate
+    
     
     var loaded: Bool?
        
@@ -61,7 +71,8 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        NSLog("View will appear")
+        NSLogDebug("View will appear")
+        app_running = false
         startServices()
         startApp()
         
@@ -78,21 +89,30 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     }
     
     @objc func willResignActive(){
-        NSLog("View: will resign active")
+        NSLogDebug("View: will resign active")
+        stopApp()
     }
     @objc func willEnterForeground(){
-        NSLog("View: will enter foreground")
+        NSLogDebug("View: will enter foreground")
+        startServices()
+        startApp()
     }
     
     @objc func didBecomeActive(){
-        NSLog("View: did become active")
+        NSLogDebug("View: did become active")
+        startServices()
+        startApp()
     }
     
     @objc func applicationWillTerminate(){
-           NSLog("View: app will terminate")
+           NSLogDebug("View: app will terminate")
+        stopApp()
+        stopServices()
        }
     @objc func didEnterBackground(){
-           NSLog("View: did enter background")
+           NSLogDebug("View: did enter background")
+        stopApp()
+        stopServices()
        }
     
     
@@ -110,13 +130,37 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         }
         
     }*/
+    func stopServices(){
+        return
+        
+        if (self.loaded!){
+            // stop cameras and audio
+            NSLogDebug("TODO: stop camera and audio")
+        }else{
+            NSLogDebug("already stopped services")
+        }
+    }
+    
+    func stopApp(){
+        if (self.app_running!){
+        self.lock = true
+        self.processImgLock = true
+        self.updater!.invalidate()
+        self.app_running = false
+        //self.videoOutput!.
+        }
+    
+    }
     
     func startApp() {
         if (!self.loaded!){
-            NSLog("system services not loaded!")
+            NSLogDebug("system services not loaded!")
             return
         }
-        
+        if (self.app_running!){
+            //NSLogDebug("already running")
+            return
+        }
         self.prev_lum1 = 0.0
         self.prev_lum = 0.0
         self.processImgLock = false
@@ -124,9 +168,11 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         self.lock = false
         
         // Start threads
-        self.videoOutput!.setSampleBufferDelegate(self, queue: DispatchQueue(label: "sample buffer delegate"))
+        //self.videoOutput!.setSampleBufferDelegate(self, queue: DispatchQueue(label: "sample buffer delegate"))
         self.updater = Timer.scheduledTimer( timeInterval: 0.07, target: self, selector: #selector(UIMenuController.update), userInfo: nil, repeats: true)
-               }
+        self.app_running = true
+    
+    }
     
     
     /* Start Up Services Camera and Audo*/
@@ -135,6 +181,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         let setup_audio = setupAudio()
         self.loaded = setup_camera && setup_audio
         setupCameraPreviewLayer()
+
         
     }
     
@@ -148,12 +195,12 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
           previewLayer!.connection?.videoOrientation = AVCaptureVideoOrientation.portrait
           previewView.layer.addSublayer(previewLayer!)
           }else{
-              NSLog("did not load preview layer due to loading error")
+              NSLogDebug("did not load preview layer due to loading error")
           }
           if (self.loaded! && previewLayer != nil){
               previewLayer!.frame = previewView.bounds
           }
-          NSLog("View did appear")
+          NSLogDebug("View did appear")
       }
       
     
@@ -174,7 +221,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             try   self.audioEngine?.start()
         }catch let error as NSError{
             setup = false
-            NSLog(error.description)
+            NSLogDebug(error.description)
         }
         return setup!
     }
@@ -188,7 +235,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
            self.backCamera = getDevice(position: .back)
            
            if self.backCamera == nil {
-               NSLog("Cant even discover a camera!")
+               NSLogDebug("Cant even discover a camera!")
                return setup!
            }
            
@@ -197,13 +244,13 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
                self.input_av_capture = try AVCaptureDeviceInput(device: self.backCamera!)
            } catch let error as NSError {
                self.input_av_capture = nil
-               NSLog("Camera error -- permissions")
-               NSLog(error.description)
+               NSLogDebug("Camera error -- permissions")
+               NSLogDebug(error.description)
                return setup!
            }
            
            self.videoOutput = AVCaptureVideoDataOutput()
-           //self.videoOutput!.setSampleBufferDelegate(self, queue: DispatchQueue(label: "sample buffer delegate"))
+           self.videoOutput!.setSampleBufferDelegate(self, queue: DispatchQueue(label: "sample buffer delegate"))
            
            if self.captureSession!.canAddInput(self.input_av_capture!) {
                self.captureSession!.addInput(self.input_av_capture!)
@@ -213,10 +260,10 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
                    self.captureSession!.startRunning()
                    setup = true
                }else{
-                   NSLog("cannot capture video output")
+                   NSLogDebug("cannot capture video output")
                }
            }else{
-               NSLog("cannot capture video input")
+               NSLogDebug("cannot capture video input")
                }
            return setup!
        }
@@ -253,7 +300,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         if (!self.loaded!){
             // ideally we would not get here, since the camera calls it
             // but in case there's a race condition
-            NSLog("GetPixels: Light detection services not enabled") //XXX should comment
+            NSLogDebug("GetPixels: Light detection services not enabled") //XXX should comment
             return
         }
         
@@ -310,12 +357,12 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     
     @objc func update() {
         if (!self.loaded!){
-            NSLog("Light detection services not enabled") //XXX should comment
+            NSLogDebug("Light detection services not enabled") //XXX should comment
             return
         }
         
         if (self.lock!){
-            NSLog("locked")
+            NSLogDebug("locked")
         } else{
             
             self.lock = true
@@ -333,7 +380,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             }
             amount = scalelum
             
-            //XXX NSLog("iso:%f, exp:%f, scalelum:%f", (self.backCamera?.ISO)!, (self.backCamera?.exposureDuration.seconds)!, scalelum)
+            //XXX NSLogDebug("iso:%f, exp:%f, scalelum:%f", (self.backCamera?.ISO)!, (self.backCamera?.exposureDuration.seconds)!, scalelum)
             self.luminance.text = String( Int(100.0*amount) )
             
             let lo = 73.0
