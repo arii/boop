@@ -62,7 +62,8 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         NSLog("View will appear")
-        startLightDetection()
+        startServices()
+        startApp()
         
         NotificationCenter.default.addObserver(self, selector: #selector(willEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
         
@@ -93,10 +94,12 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     @objc func didEnterBackground(){
            NSLog("View: did enter background")
        }
+    
+    
         
-    func startLightDetection(){
+   /* func startLightDetection(){
         self.setupServices()
-        setupCameraPreviewLayer()
+        
         self.prev_lum1 = 0.0
         self.prev_lum = 0.0
         self.processImgLock = false
@@ -106,34 +109,54 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             self.updater = Timer.scheduledTimer( timeInterval: 0.07, target: self, selector: #selector(UIMenuController.update), userInfo: nil, repeats: true)
         }
         
-    }
+    }*/
     
-   
-    func setupCameraPreviewLayer(){
+    func startApp() {
         if (!self.loaded!){
-            self.vibrate_label.text="camera error"
+            NSLog("system services not loaded!")
+            return
         }
         
-        if (self.loaded!){
-        previewLayer = AVCaptureVideoPreviewLayer(session: self.captureSession!)
-        previewLayer!.connection?.videoOrientation = AVCaptureVideoOrientation.portrait
-        previewView.layer.addSublayer(previewLayer!)
-        }else{
-            NSLog("did not load preview layer due to loading error")
-        }
-        if (self.loaded! && previewLayer != nil){
-            previewLayer!.frame = previewView.bounds
-        }
-        NSLog("View did appear")
-    }
+        self.prev_lum1 = 0.0
+        self.prev_lum = 0.0
+        self.processImgLock = false
+        self.lastBuzz =   NSDate().timeIntervalSince1970
+        self.lock = false
+        
+        // Start threads
+        self.videoOutput!.setSampleBufferDelegate(self, queue: DispatchQueue(label: "sample buffer delegate"))
+        self.updater = Timer.scheduledTimer( timeInterval: 0.07, target: self, selector: #selector(UIMenuController.update), userInfo: nil, repeats: true)
+               }
     
     
     /* Start Up Services Camera and Audo*/
-    func setupServices(){
+    func startServices(){
         let setup_camera = setupCamera()
         let setup_audio = setupAudio()
         self.loaded = setup_camera && setup_audio
+        setupCameraPreviewLayer()
+        
     }
+    
+    func setupCameraPreviewLayer(){
+          if (!self.loaded!){
+              self.vibrate_label.text="camera error"
+          }
+          
+          if (self.loaded!){
+          previewLayer = AVCaptureVideoPreviewLayer(session: self.captureSession!)
+          previewLayer!.connection?.videoOrientation = AVCaptureVideoOrientation.portrait
+          previewView.layer.addSublayer(previewLayer!)
+          }else{
+              NSLog("did not load preview layer due to loading error")
+          }
+          if (self.loaded! && previewLayer != nil){
+              previewLayer!.frame = previewView.bounds
+          }
+          NSLog("View did appear")
+      }
+      
+    
     
     func setupAudio() -> Bool {
         var setup : Bool?
@@ -180,7 +203,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
            }
            
            self.videoOutput = AVCaptureVideoDataOutput()
-           self.videoOutput!.setSampleBufferDelegate(self, queue: DispatchQueue(label: "sample buffer delegate"))
+           //self.videoOutput!.setSampleBufferDelegate(self, queue: DispatchQueue(label: "sample buffer delegate"))
            
            if self.captureSession!.canAddInput(self.input_av_capture!) {
                self.captureSession!.addInput(self.input_av_capture!)

@@ -11,7 +11,7 @@ import AudioToolbox
 import AVFoundation
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate,AVCaptureVideoDataOutputSampleBufferDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     let special_test = "Hello World!"
