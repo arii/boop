@@ -21,11 +21,12 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     @IBOutlet weak var luminance: UILabel!
     
     var mySound: AVAudioPlayer?
-    var captureSession: AVCaptureSession?
-    var stillImageOutput: AVCaptureStillImageOutput?
-    var previewLayer: AVCaptureVideoPreviewLayer?
-    var input_av_capture: AVCaptureDeviceInput?
     
+    var captureSession: AVCaptureSession?
+    var input_av_capture: AVCaptureDeviceInput?
+    var videoOutput : AVCaptureVideoDataOutput?
+    
+    var previewLayer: AVCaptureVideoPreviewLayer?
     var SwiftTimer : Timer?
     
     //var audioEngine : AVAudioEngine?
@@ -70,7 +71,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     override func viewDidAppear(_ animated: Bool) {
         // make it so we can see the camera stream
         super.viewDidAppear(animated)
-        if (self.loaded!){
+        if (self.loaded! && previewLayer != nil){
             previewLayer!.frame = previewView.bounds
         }
         NSLog("View did appear")
@@ -79,6 +80,7 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         
     func startLightDetection(){
         setupServices()
+        setupCameraPreviewLayer()
         
         self.prev_lum1 = 0.0
         self.prev_lum = 0.0
@@ -112,11 +114,11 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     func setupCamera() -> Bool {
         
         var setup : Bool?
+        setup = false
         
         self.captureSession = AVCaptureSession()
-        
-        setup = false
         self.backCamera = getDevice(position: .back)
+        
         if self.backCamera == nil {
             NSLog("Cant even discover a camera!")
             return setup!
@@ -132,21 +134,33 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
             return setup!
         }
         
-        // set up streaming
-        let videoOutput = AVCaptureVideoDataOutput()
-        videoOutput.setSampleBufferDelegate(self, queue: DispatchQueue(label: "sample buffer delegate"))
+        self.videoOutput = AVCaptureVideoDataOutput()
+        self.videoOutput!.setSampleBufferDelegate(self, queue: DispatchQueue(label: "sample buffer delegate"))
         
-        if captureSession!.canAddInput(self.input_av_capture!) {
-            captureSession!.addInput(self.input_av_capture!)
+        if self.captureSession!.canAddInput(self.input_av_capture!) {
+            self.captureSession!.addInput(self.input_av_capture!)
+        
+            if self.captureSession!.canAddOutput(self.videoOutput!) {
+                self.captureSession!.addOutput(self.videoOutput!)
+                self.captureSession!.startRunning()
+                setup = true
+            }else{
+                NSLog("cannot capture video output")
+            }
+        }else{
+            NSLog("cannot capture video input")
+            }
+            /*
             
             stillImageOutput = AVCaptureStillImageOutput()
             stillImageOutput!.outputSettings = [AVVideoCodecKey: AVVideoCodecJPEG]
             if captureSession!.canAddOutput(stillImageOutput!) {
                 
                 captureSession!.addOutput(stillImageOutput!)
-                previewLayer = AVCaptureVideoPreviewLayer(session: captureSession!)
+                
+                /*previewLayer = AVCaptureVideoPreviewLayer(session: captureSession!)
                 previewLayer!.connection?.videoOrientation = AVCaptureVideoOrientation.portrait
-                previewView.layer.addSublayer(previewLayer!)
+                previewView.layer.addSublayer(previewLayer!)*/
                 
                 captureSession!.addOutput(videoOutput)
                 captureSession!.startRunning()
@@ -155,38 +169,20 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
         }else {
             NSLog("cannot get camera input")
             setup = false
-        }
+        }*/
         return setup!
         
     }
-   /*
-    func setupCameraPassthrough() -> Bool{
-        var setup : Bool?
-        
-        self.captureSession = AVCaptureSession()
-        // show what the camera sees in previewLayer
-        if captureSession!.canAddInput(input_av_capture) {
-            captureSession!.addInput(input_av_capture)
-            
-            stillImageOutput = AVCaptureStillImageOutput()
-            stillImageOutput!.outputSettings = [AVVideoCodecKey: AVVideoCodecJPEG]
-            if captureSession!.canAddOutput(stillImageOutput!) {
-                
-                captureSession!.addOutput(stillImageOutput!)
-                previewLayer = AVCaptureVideoPreviewLayer(session: captureSession!)
-                previewLayer!.connection?.videoOrientation = AVCaptureVideoOrientation.portrait
-                previewView.layer.addSublayer(previewLayer!)
-                
-                captureSession!.addOutput(videoOutput)
-                captureSession!.startRunning()
-                setup = true
-            }
-        }else {
-            NSLog("cannot get camera input")
-            setup = false
+   
+    func setupCameraPreviewLayer(){
+        if (self.loaded!){
+        previewLayer = AVCaptureVideoPreviewLayer(session: self.captureSession!)
+        previewLayer!.connection?.videoOrientation = AVCaptureVideoOrientation.portrait
+        previewView.layer.addSublayer(previewLayer!)
+        }else{
+            NSLog("did not load preview layer due to loading error")
         }
-        return setup!
-    }*/
+    }
     
     /*func setupAudio() -> Bool {
         var setup : Bool?
