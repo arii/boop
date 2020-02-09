@@ -31,50 +31,91 @@ class ViewController: UIViewController, AVCaptureVideoDataOutputSampleBufferDele
     
     let AD = UIApplication.shared.delegate as! AppDelegate
 
+
+  /*  - (void)viewDidLoad
+    {
+        [super viewDidLoad];
+        NSLog(@"view did load");
+
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
+    }
+
+    - (void)appDidBecomeActive:(NSNotification *)notification {
+        NSLog(@"did become active notification");
+    }
+
+    - (void)appWillEnterForeground:(NSNotification *)notification {
+        NSLog(@"will enter foreground notification");
+    }
+
+    - (void)viewWillAppear:(BOOL)animated {
+        [super viewWillAppear:animated];
+        NSLog(@"view will appear");
+    }
+
+    - (void)viewDidAppear:(BOOL)animated {
+        [super viewDidAppear:animated];
+        NSLog(@"view did appear");
+    }*/
+    
+
+    
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
         NSLog("View will appear")
-        
         startLightDetection()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(willEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(didBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
+        
+         NotificationCenter.default.addObserver(self, selector: #selector(applicationWillTerminate), name: UIApplication.willTerminateNotification, object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(didEnterBackground), name: UIApplication.didEnterBackgroundNotification, object: nil)
+        
+         NotificationCenter.default.addObserver(self, selector: #selector(willResignActive), name: UIApplication.willResignActiveNotification, object: nil)
+               
     }
+    
+    @objc func willResignActive(){
+        NSLog("View: will resign active")
+    }
+    @objc func willEnterForeground(){
+        NSLog("View: will enter foreground")
+    }
+    
+    @objc func didBecomeActive(){
+        NSLog("View: did become active")
+    }
+    
+    @objc func applicationWillTerminate(){
+           NSLog("View: app will terminate")
+       }
+    @objc func didEnterBackground(){
+           NSLog("View: did enter background")
+       }
         
     func startLightDetection(){
-        setupServices()
+        AD.setupServices()
         setupCameraPreviewLayer()
         
-        AD.prev_lum1 = 0.0
-        AD.prev_lum = 0.0
         self.lastBuzz =   NSDate().timeIntervalSince1970
         self.lock = false
-        AD.processImgLock = false
         if (AD.loaded!){
             self.updater = Timer.scheduledTimer( timeInterval: 0.07, target: self, selector: #selector(UIMenuController.update), userInfo: nil, repeats: true)
         }
         
     }
     
-    
-    /* Start Up Services Camera and Audo*/
-    func setupServices(){
-        let setup_camera = AD.setupCamera()
-        let setup_audio = AD.setupAudio()
 
-        //let setup_audio = setupAudio()
-        AD.loaded = setup_camera && setup_audio
-        if (!AD.loaded!){
-            var vib_text : String?
-            if (setup_camera){
-                vib_text = "sound error"
-            }else{
-                vib_text = "camera error"
-            }
-            self.vibrate_label.text=vib_text
-        }
-    }
    
     func setupCameraPreviewLayer(){
+        if (!AD.loaded!){
+            self.vibrate_label.text="camera error"
+        }
+        
         if (AD.loaded!){
         previewLayer = AVCaptureVideoPreviewLayer(session: AD.captureSession!)
         previewLayer!.connection?.videoOrientation = AVCaptureVideoOrientation.portrait

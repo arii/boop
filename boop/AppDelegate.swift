@@ -44,10 +44,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate,AVCaptureVideoDataOutputSa
     var processImgLock : Bool?
     var lock : Bool?
     
-    
-  
-    
-    
 
     private func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
@@ -55,8 +51,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate,AVCaptureVideoDataOutputSa
         
         return true
     }
-    
-    
     
     
     func applicationWillResignActive(_ application: UIApplication) {
@@ -94,7 +88,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate,AVCaptureVideoDataOutputSa
     }
     
     
-
+    /* Start Up Services Camera and Audo*/
+    func setupServices(){
+        let setup_camera = setupCamera()
+        let setup_audio = setupAudio()
+        self.loaded = setup_camera && setup_audio
+        self.prev_lum1 = 0.0
+        self.prev_lum = 0.0
+        self.processImgLock = false
+    }
     
     func setupAudio() -> Bool {
         var setup : Bool?
